@@ -200,6 +200,7 @@ window.OverworldMaps = {
       [utils.asGridCoord(0, 7)]: true,
       [utils.asGridCoord(0, 8)]: true,
       [utils.asGridCoord(0, 9)]: true,
+      [utils.asGridCoord(5, 11)]: true,
     },
     cutsceneSpaces: {
       [utils.asGridCoord(7, 4)]: [
@@ -211,6 +212,124 @@ window.OverworldMaps = {
             { who: "npcB", type: "walk", direction: "right" },
             { who: "hero", type: "walk", direction: "down" },
             { who: "hero", type: "walk", direction: "left" },
+          ],
+        },
+      ],
+      [utils.asGridCoord(5, 10)]: [
+        {
+          events: [{ type: "changeMap", map: "Street" }],
+        },
+      ],
+    },
+  },
+  Street: {
+    lowerSrc: "/images/maps/StreetLower.png",
+    upperSrc: "/images/maps/StreetUpper.png",
+    gameObjects: {
+      hero: new Person({
+        isPlayerControlled: true,
+        x: utils.withGrid(5),
+        y: utils.withGrid(10),
+      }),
+      npcA: new Person({
+        x: utils.withGrid(9),
+        y: utils.withGrid(11),
+        src: "/images/characters/people/npc1.png",
+        behaviorLoop: [
+          { type: "stand", direction: "left", time: 800 },
+          { type: "stand", direction: "up", time: 800 },
+          { type: "stand", direction: "right", time: 1200 },
+          { type: "stand", direction: "up", time: 300 },
+        ],
+        talking: [
+          {
+            events: [
+              {
+                type: "textMessage",
+                text: "to get your task proceed to the shop",
+                faceHero: "npcA",
+              },
+              { type: "textMessage", text: "Go away!" },
+            ],
+          },
+        ],
+      }),
+      npcB: new Person({
+        x: utils.withGrid(19),
+        y: utils.withGrid(9),
+        src: "/images/characters/people/npc2.png",
+        // behaviorLoop: [
+        //   { type: "walk",  direction: "left" },
+        //   { type: "stand",  direction: "up", time: 800 },
+        //   { type: "walk",  direction: "up" },
+        //   { type: "walk",  direction: "right" },
+        //   { type: "walk",  direction: "down" },
+        // ],
+        talking: [
+          {
+            events: [
+              {
+                type: "questionMessage",
+                question: "What is your name?",
+                answer: "Bob",
+                faceHero: "npcB",
+                onComplete: (isCorrect, userAnswer) => {
+                  console.log("Your answer was: ", QuestionMessage.userAnswer);
+                  console.log("Is correct: ", QuestionMessage.isCorrect);
+                },
+              },
+            ],
+          },
+        ],
+      }),
+    },
+    walls: {
+      [utils.asGridCoord(3, 10)]: true,
+      [utils.asGridCoord(3, 11)]: true,
+      [utils.asGridCoord(3, 12)]: true,
+      [utils.asGridCoord(3, 13)]: true,
+      [utils.asGridCoord(3, 14)]: true,
+      [utils.asGridCoord(3, 15)]: true,
+      [utils.asGridCoord(3, 16)]: true,
+      [utils.asGridCoord(3, 17)]: true,
+      [utils.asGridCoord(3, 18)]: true,
+      [utils.asGridCoord(4, 14)]: true,
+      [utils.asGridCoord(5, 14)]: true,
+      [utils.asGridCoord(6, 14)]: true,
+      [utils.asGridCoord(7, 14)]: true,
+      [utils.asGridCoord(8, 14)]: true,
+      [utils.asGridCoord(9, 14)]: true,
+      [utils.asGridCoord(10, 14)]: true,
+      [utils.asGridCoord(11, 14)]: true,
+      [utils.asGridCoord(12, 14)]: true,
+      [utils.asGridCoord(13, 14)]: true,
+      [utils.asGridCoord(14, 14)]: true,
+      [utils.asGridCoord(15, 14)]: true,
+      [utils.asGridCoord(16, 14)]: true,
+      [utils.asGridCoord(17, 14)]: true,
+      [utils.asGridCoord(18, 14)]: true,
+      [utils.asGridCoord(19, 14)]: true,
+      [utils.asGridCoord(20, 14)]: true,
+      [utils.asGridCoord(21, 14)]: true,
+      [utils.asGridCoord(22, 14)]: true,
+      [utils.asGridCoord(23, 14)]: true,
+      [utils.asGridCoord(24, 14)]: true,
+      [utils.asGridCoord(25, 14)]: true,
+      [utils.asGridCoord(26, 14)]: true,
+      [utils.asGridCoord(27, 14)]: true,
+      [utils.asGridCoord(28, 14)]: true,
+      [utils.asGridCoord(29, 14)]: true,
+      [utils.asGridCoord(30, 14)]: true,
+      [utils.asGridCoord(31, 14)]: true,
+      [utils.asGridCoord(32, 14)]: true,
+      [utils.asGridCoord(33, 14)]: true,
+    },
+    cutsceneSpaces: {
+      [utils.asGridCoord(5, 9)]: [
+        {
+          events: [
+            { type: "changeMap", map: "DemoRoom" },
+            { type: "textMessage", text: "Welcome back to the demo room!" },
           ],
         },
       ],

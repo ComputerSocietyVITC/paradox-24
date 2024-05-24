@@ -65,19 +65,38 @@ class OverworldEvent {
     message.init(document.querySelector(".game-container"));
   }
 
-  // changeMap(resolve) {
+  questionMessage(resolve) {
+    if (this.event.faceHero) {
+      const obj = this.map.gameObjects[this.event.faceHero];
+      obj.direction = utils.oppositeDirection(
+        this.map.gameObjects["hero"].direction
+      );
+    }
 
-  //   const sceneTransition = new SceneTransition();
-  //   sceneTransition.init(document.querySelector(".game-container"), () => {
-  //     this.map.overworld.startMap( window.OverworldMaps[this.event.map] );
-  //     resolve();
+    const question = new QuestionMessage({
+      question: this.event.question,
+      answer: this.event.answer,
+      onComplete: (isCorrect) => {
+        // You can handle the result of the question here.
+        // For example, you might want to do something different depending on whether the answer was correct.
+        resolve(isCorrect);
+      },
+    });
+    question.init(document.querySelector(".game-container"));
+  }
 
-  //     sceneTransition.fadeOut();
+  changeMap(resolve) {
+    const sceneTransition = new SceneTransition();
+    sceneTransition.init(document.querySelector(".game-container"), () => {
+      this.map.overworld.startMap(window.OverworldMaps[this.event.map]);
+      resolve();
 
-  //   })
-  // }
+      sceneTransition.fadeOut();
+    });
+  }
 
   init() {
+    console.log(`Event type: ${this.event.type}`);
     return new Promise((resolve) => {
       this[this.event.type](resolve);
     });
