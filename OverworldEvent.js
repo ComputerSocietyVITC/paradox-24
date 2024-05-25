@@ -17,7 +17,6 @@ class OverworldEvent {
       }
     );
 
-    //Set up a handler to complete when correct person is done walking, then resolve the event
     const completeHandler = (e) => {
       if (e.detail.whoId === this.event.who) {
         document.removeEventListener("PersonStandComplete", completeHandler);
@@ -40,7 +39,6 @@ class OverworldEvent {
       }
     );
 
-    //Set up a handler to complete when correct person is done walking, then resolve the event
     const completeHandler = (e) => {
       if (e.detail.whoId === this.event.who) {
         document.removeEventListener("PersonWalkingComplete", completeHandler);
@@ -76,10 +74,14 @@ class OverworldEvent {
     const question = new QuestionMessage({
       question: this.event.question,
       answer: this.event.answer,
-      onComplete: (isCorrect) => {
-        // You can handle the result of the question here.
-        // For example, you might want to do something different depending on whether the answer was correct.
-        resolve(isCorrect);
+      onComplete: (isCorrect, userAnswer) => {
+        console.log(`User answered correctly: ${isCorrect}`);
+
+        const feedbackMessage = new TextMessage({
+          text: isCorrect ? "Correct!" : "Incorrect, try again!",
+          onComplete: () => resolve(isCorrect),
+        });
+        feedbackMessage.init(document.querySelector(".game-container"));
       },
     });
     question.init(document.querySelector(".game-container"));

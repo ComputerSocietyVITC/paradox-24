@@ -4,6 +4,7 @@ class QuestionMessage {
     this.answer = answer;
     this.onComplete = onComplete;
     this.element = null;
+    this.isAnswered = false; // To prevent multiple submissions
   }
 
   createElement() {
@@ -16,7 +17,6 @@ class QuestionMessage {
       <button class="QuestionMessage_button">Submit</button>
     `;
 
-    // Init the typewriter effect for the question
     this.revealingText = new RevealingText({
       element: this.element.querySelector(".QuestionMessage_p"),
       text: this.question,
@@ -26,29 +26,29 @@ class QuestionMessage {
       this.checkAnswer();
     });
 
-    // Prevent "Enter" from creating a new line in the textarea
     this.element
       .querySelector(".QuestionMessage_textarea")
       .addEventListener("keydown", (event) => {
         if (event.key === "Enter") {
-          event.preventDefault();
+          event.preventDefault(); // Prevent the default action (newline)
           this.checkAnswer();
         }
       });
   }
 
   checkAnswer() {
+    if (this.isAnswered) return; // Prevent multiple submissions
+
     const userAnswer = this.element.querySelector(
       ".QuestionMessage_textarea"
     ).value;
     const isCorrect = userAnswer === this.answer;
+    this.isAnswered = true;
 
-    // Remove the question element
     this.element.remove();
-
-    // Pass the user's answer to the onComplete function
     this.onComplete(isCorrect, userAnswer);
   }
+
   init(container) {
     this.createElement();
     container.appendChild(this.element);
