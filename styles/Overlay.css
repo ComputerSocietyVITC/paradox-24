@@ -1,0 +1,12 @@
+.Hud{
+  position: absolute;
+  top: 0;
+  left: 153px;
+  right: 0;
+  bottom: 0;
+  height: 0px;
+  font-size: smaller;
+  padding: 0px;
+  color: red;
+  margin: 0;
+}

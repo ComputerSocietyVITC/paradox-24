@@ -1,6 +1,7 @@
 class OverworldMap {
   constructor(config) {
     this.overworld = null;
+
     this.gameObjects = config.gameObjects;
     this.cutsceneSpaces = config.cutsceneSpaces || {};
     this.walls = config.walls || {};
@@ -60,6 +61,7 @@ class OverworldMap {
       const eventHandler = new OverworldEvent({
         event: events[i],
         map: this,
+        overlay: this.overworld.overlay
       });
       await eventHandler.init();
     }
@@ -120,6 +122,10 @@ class OverworldMap {
 }
 
 window.OverworldMaps = {
+  // Overlay : {
+  //   src: "/images/characters/people/npc2.png",
+  //   offset: 0
+  // },
   DemoRoom: {
     lowerSrc: "/images/maps/DemoLower.png",
     upperSrc: "/images/maps/DemoUpper.png",
@@ -144,7 +150,6 @@ window.OverworldMaps = {
             events: [
               { type: "textMessage", text: "I'm busy...", faceHero: "npcA" },
               { type: "textMessage", text: "Go away!" },
-              { who: "hero", type: "walk", direction: "up" },
             ],
           },
         ],
@@ -271,6 +276,7 @@ window.OverworldMaps = {
               {
                 type: "questionMessage",
                 question: "What is your name?",
+                qsnValue: 10,
                 answer: "Bob",
                 faceHero: "npcB",
                 onComplete: (isCorrect, userAnswer) => {

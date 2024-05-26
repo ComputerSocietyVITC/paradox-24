@@ -32,6 +32,6 @@ const utils = {
       detail
     });
     document.dispatchEvent(event);
-  }
+  },
   
 }
