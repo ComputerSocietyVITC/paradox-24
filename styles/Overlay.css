@@ -1,12 +1,15 @@
-.Hud{
+.Hud {
   position: absolute;
   top: 0;
   left: 153px;
   right: 0;
   bottom: 0;
-  height: 0px;
-  font-size: smaller;
+  height: 10px;
+  width: 50px;
+  font-size: .5rem;
   padding: 0px;
-  color: red;
+  color: rgb(174, 0, 157);
+  /* background-color: rgb(96, 0, 206); */
+  border-radius: 10px;
   margin: 0;
 }
