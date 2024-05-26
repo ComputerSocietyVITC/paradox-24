@@ -4,6 +4,7 @@ class Overworld {
     this.canvas = this.element.querySelector(".game-canvas");
     this.ctx = this.canvas.getContext("2d");
     this.map = null;
+    this.overlay = null;
   }
 
   startGameLoop() {
@@ -38,7 +39,7 @@ class Overworld {
       this.map.drawUpperImage(this.ctx, cameraPerson);
       
       //Draw Overlay
-      this.map.drawOverlay(this.ctx);
+      // this.overlay.drawOverlay(this.ctx);
 
       requestAnimationFrame(() => {
         step();
@@ -69,9 +70,15 @@ class Overworld {
     this.map.mountObjects();
   }
 
+  startOverlay(overlayConfig){
+    this.overlay = new Overlay(overlayConfig);
+    this.overlay.overworld = this;
+    this.overlay.init(document.querySelector(".game-container"));
+  }
+
   init() {
     this.startMap(window.OverworldMaps.DemoRoom);
-
+    this.startOverlay(window.OverworldMaps.Overlay);
     this.bindActionInput();
     this.bindHeroPositionCheck();
 

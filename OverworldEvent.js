@@ -1,6 +1,7 @@
 class OverworldEvent {
-  constructor({ map, event }) {
+  constructor({ map, overlay, event }) {
     this.map = map;
+    this.overlay = overlay;
     this.event = event;
   }
 
@@ -74,15 +75,12 @@ class OverworldEvent {
     const question = new QuestionMessage({
       question: this.event.question,
       answer: this.event.answer,
+      qsnValue: this.event.qsnValue,   // Points to be rewarded for correct answer
       onComplete: (isCorrect, userAnswer) => {
         console.log(`User answered correctly: ${isCorrect}`);
 
         if(isCorrect){
-          let newOverlaySrc = "images/characters/people/npc2.png"
-          // for(let i in window.OverworldMaps){
-             utils.overlay.src = newOverlaySrc;
-             utils.overlay.offset += 2;
-          // }
+          this.overlay.setMoney(this);
         }
 
         const feedbackMessage = new TextMessage({

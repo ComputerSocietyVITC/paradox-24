@@ -34,8 +34,4 @@ const utils = {
     document.dispatchEvent(event);
   },
   
-  overlay : {
-    src : "/images/characters/people/npc1.png",
-    offset: 0
-  },
 }

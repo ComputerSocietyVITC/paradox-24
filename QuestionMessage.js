@@ -1,10 +1,11 @@
 class QuestionMessage {
-  constructor({ question, answer, onComplete }) {
+  constructor({ question, answer, qsnValue, onComplete }) {
     this.question = question;
     this.answer = answer;
+    this.qsnValue = qsnValue;      // Points rewarded to each qsn
     this.onComplete = onComplete;
     this.element = null;
-    this.isAnswered = false; // To prevent multiple submissions
+    this.isAnswered = false; // To prevent multiple submissions   
   }
 
   createElement() {
