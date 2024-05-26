@@ -36,6 +36,9 @@ class Overworld {
 
       //Draw Upper layer
       this.map.drawUpperImage(this.ctx, cameraPerson);
+      
+      //Draw Overlay
+      this.map.drawOverlay(this.ctx);
 
       requestAnimationFrame(() => {
         step();

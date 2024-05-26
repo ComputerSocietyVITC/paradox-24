@@ -1,6 +1,10 @@
 class OverworldMap {
   constructor(config) {
     this.overworld = null;
+
+    this.overlay = new Image();
+    this.overlay.src = utils.overlay.src;
+
     this.gameObjects = config.gameObjects;
     this.cutsceneSpaces = config.cutsceneSpaces || {};
     this.walls = config.walls || {};
@@ -29,6 +33,16 @@ class OverworldMap {
       this.upperImage,
       utils.withGrid(10.5) - cameraPerson.x,
       utils.withGrid(6) - cameraPerson.y
+    );
+  }
+
+  drawOverlay(ctx){
+    this.overlay.src = utils.overlay.src;
+
+    ctx.drawImage(
+      this.overlay,
+      utils.withGrid(14 + utils.overlay.offset) ,
+      utils.withGrid(-7)
     );
   }
 
@@ -271,7 +285,7 @@ window.OverworldMaps = {
               {
                 type: "questionMessage",
                 question: "What is your name?",
-                answer: "Bob",
+                answer: "k",
                 faceHero: "npcB",
                 onComplete: (isCorrect, userAnswer) => {
                   console.log("Your answer was: ", QuestionMessage.userAnswer);

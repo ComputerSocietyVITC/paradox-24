@@ -77,6 +77,14 @@ class OverworldEvent {
       onComplete: (isCorrect, userAnswer) => {
         console.log(`User answered correctly: ${isCorrect}`);
 
+        if(isCorrect){
+          let newOverlaySrc = "images/characters/people/npc2.png"
+          // for(let i in window.OverworldMaps){
+             utils.overlay.src = newOverlaySrc;
+             utils.overlay.offset += 2;
+          // }
+        }
+
         const feedbackMessage = new TextMessage({
           text: isCorrect ? "Correct!" : "Incorrect, try again!",
           onComplete: () => resolve(isCorrect),
