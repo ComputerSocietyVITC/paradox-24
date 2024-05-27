@@ -11,7 +11,7 @@ class PauseMenu {
         this.element.innerHTML = `
         <div class="pause-menu-content">
           <h1>Pause Menu</h1>
-          <p>Points: ${this.overworld.overlay.money}</p>
+          <p>Points: ${this.overworld.money}</p>
           <button class="save-button">Save Game</button>
           <button class="load-button">Load Game</button>
           <button class="resume-button">Resume</button>
@@ -69,15 +69,28 @@ class PauseMenu {
             return;
         }
 
-        const overlay = this.overworld.overlay;
+        const overworld = this.overworld;
         const map = this.overworld.map;
-        const hero = map.gameObjects.hero;
+        const gameObjects = map.gameObjects;
 
         const gameData = {
-            money: overlay.money,
-            progress: map.currentEventIndex || 0, // Assuming currentEventIndex tracks the progress of the game
-            userPosition: { x: hero.x, y: hero.y }, // Assuming position is stored in the hero object
-            // Add other game data you want to save here
+            mapName: map.mapName,
+            money: overworld.money,
+            progress: map.currentEventIndex || 0,
+            gameObjects: Object.entries(gameObjects).reduce((acc, [key, obj]) => {
+                acc[key] = {
+                    x: obj.x,
+                    y: obj.y,
+                    direction: obj.direction,
+                    behaviorLoop: obj.behaviorLoop,
+                    talking: obj.talking,
+
+                };
+                return acc;
+            }, {}),
+            cutsceneSpaces: map.cutsceneSpaces,
+            walls: map.walls,
+
         };
 
         localStorage.setItem('gameData', JSON.stringify(gameData));
@@ -90,27 +103,55 @@ class PauseMenu {
         a.click();
         URL.revokeObjectURL(url);
 
-
         alert("Game saved successfully!");
     }
+
 
     loadGame() {
         const gameData = JSON.parse(localStorage.getItem('gameData'));
         if (gameData) {
-            const overlay = this.overworld.overlay;
-            const map = this.overworld.map;
-            const hero = map.gameObjects.hero;
+            const overworld = this.overworld;
+            const mapName = gameData.mapName;
+            const mapConfig = window.OverworldMaps[mapName];
 
-            overlay.money = gameData.money;
-            map.currentEventIndex = gameData.progress;
-            hero.x = gameData.userPosition.x;
-            hero.y = gameData.userPosition.y;
+            if (mapConfig) {
+                this.overworld.map = new OverworldMap(mapConfig);
 
-            overlay.element.innerHTML = `
-          <p class="Hud">Points: ${overlay.money}</p>
-        `;
+                const hero = this.overworld.map.gameObjects.hero;
+                const gameObjects = gameData.gameObjects;
 
-            alert("Game loaded successfully!");
+                // Set game objects' positions and other properties
+                Object.entries(gameObjects).forEach(([key, obj]) => {
+                    const gameObject = this.overworld.map.gameObjects[key];
+                    if (gameObject) {
+                        gameObject.x = obj.x;
+                        gameObject.y = obj.y;
+                        gameObject.direction = obj.direction;
+                        gameObject.behaviorLoop = obj.behaviorLoop;
+                        gameObject.talking = obj.talking;
+                        // Set any other relevant properties of the game objects
+                    }
+                });
+
+                // Set hero's position
+                hero.x = gameObjects.hero.x;
+                hero.y = gameObjects.hero.y;
+
+                // Update points and other game data
+                overworld.money = gameData.money;
+                this.overworld.map.currentEventIndex = gameData.progress;
+                this.overworld.map.cutsceneSpaces = gameData.cutsceneSpaces;
+                this.overworld.map.walls = gameData.walls;
+                overworld.hud.innerHTML = `
+                  <p class="Hud">Points: ${overworld.money}</p>
+                `;
+                this.overworld.map.overworld = overworld;
+                this.overworld.map.mountObjects();
+
+                alert("Game loaded successfully!");
+            } else {
+                console.error("Map configuration not found for map name:", mapName);
+            }
         } else {
             alert("No saved game data found.");
         }
@@ -135,3 +176,5 @@ window.addEventListener("load", () => {
         console.error("Overworld is not defined on window.");
     }
 });
+
+

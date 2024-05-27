@@ -9,7 +9,7 @@ class RevealingText {
   }
 
   revealOneCharacter(list) {
-    const next = list.splice(0,1)[0];
+    const next = list.splice(0, 1)[0];
     next.span.classList.add("revealed");
 
     if (list.length > 0) {
@@ -41,7 +41,7 @@ class RevealingText {
       //Add this span to our internal state Array
       characters.push({
         span,
-        delayAfter: character === " " ? 0 : this.speed         
+        delayAfter: character === " " ? 0 : this.speed
       })
     })
 
