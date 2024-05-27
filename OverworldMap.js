@@ -1,6 +1,7 @@
 class OverworldMap {
   constructor(config) {
     this.overworld = null;
+    this.mapName = config.mapName;
 
     this.gameObjects = config.gameObjects;
     this.cutsceneSpaces = config.cutsceneSpaces || {};
@@ -16,6 +17,7 @@ class OverworldMap {
     this.initialCutscenePlayed = false; // Flag to track if the initial cutscene has been played
     this.secondCutscenePlayed = false; // Flag to track if the second cutscene has been played
   }
+
 
   drawLowerImage(ctx, cameraPerson) {
     ctx.drawImage(
@@ -60,8 +62,7 @@ class OverworldMap {
     for (let i = 0; i < events.length; i++) {
       const eventHandler = new OverworldEvent({
         event: events[i],
-        map: this,
-        overlay: this.overworld.overlay
+        map: this
       });
       await eventHandler.init();
     }
@@ -122,11 +123,8 @@ class OverworldMap {
 }
 
 window.OverworldMaps = {
-  // Overlay : {
-  //   src: "/images/characters/people/npc2.png",
-  //   offset: 0
-  // },
   DemoRoom: {
+    mapName: "DemoRoom",
     lowerSrc: "/images/maps/DemoLower.png",
     upperSrc: "/images/maps/DemoUpper.png",
     gameObjects: {
@@ -228,6 +226,7 @@ window.OverworldMaps = {
     },
   },
   Street: {
+    mapName: "Street",
     lowerSrc: "/images/maps/StreetLower.png",
     upperSrc: "/images/maps/StreetUpper.png",
     gameObjects: {

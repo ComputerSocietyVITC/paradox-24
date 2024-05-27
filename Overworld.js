@@ -1,10 +1,11 @@
 class Overworld {
   constructor(config) {
     this.element = config.element;
+    this.hud = null;
     this.canvas = this.element.querySelector(".game-canvas");
     this.ctx = this.canvas.getContext("2d");
     this.map = null;
-    this.overlay = null;
+    this.money = 0;         //money
     this.isPaused = false; // Track if the game is paused
   }
 
@@ -40,9 +41,6 @@ class Overworld {
         // Draw Upper layer
         this.map.drawUpperImage(this.ctx, cameraPerson);
 
-        // Draw Overlay
-        // this.overlay.drawOverlay(this.ctx);
-
         requestAnimationFrame(step);
       }
     };
@@ -77,23 +75,51 @@ class Overworld {
   startMap(mapConfig) {
     this.map = new OverworldMap(mapConfig);
     this.map.overworld = this;
+    this.cameraPerson = this.map.gameObjects.hero;
     this.map.mountObjects();
   }
 
-  startOverlay(overlayConfig) {
-    this.overlay = new Overlay(overlayConfig);
-    this.overlay.overworld = this;
-    this.overlay.init(document.querySelector(".game-container"));
-  }
+  setMoney(object){
+
+    if(object.event.qsnValue > 0){
+        console.log(object.event.qsnValue);
+
+        this.map.overworld.money += object.event.qsnValue;
+        object.event.qsnValue = 0;
+
+        this.element.innerHTML = (`
+        <p class="Hud">Points: ${this.map.overworld.money}</p> 
+    `)
+    }
+    console.log(this.money);
+ }
+
+
+ initMoney(container){
+
+  //Create the element
+  this.element = document.createElement("div");
+  this.element.classList.add("Hud");
+
+  this.element.innerHTML = (`
+      <p class="Hud">Points: ${this.money}</p> 
+  `)
+
+
+  container.appendChild(this.element);
+
+    this.hud = document.querySelector(".Hud");
+}
 
   init() {
     this.startMap(window.OverworldMaps.DemoRoom);
-    this.startOverlay(window.OverworldMaps.Overlay);
     this.bindActionInput();
     this.bindHeroPositionCheck();
 
     this.directionInput = new DirectionInput();
     this.directionInput.init();
+
+    this.initMoney(document.querySelector(".game-container"));
 
     this.startGameLoop();
     this.map.startCutscene([
@@ -118,3 +144,5 @@ class Overworld {
     window.overworld = this;
   }
 }
+
+

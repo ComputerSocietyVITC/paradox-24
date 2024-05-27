@@ -1,7 +1,6 @@
 class OverworldEvent {
-  constructor({ map, overlay, event }) {
+  constructor({ map, event }) {
     this.map = map;
-    this.overlay = overlay;
     this.event = event;
   }
 
@@ -73,14 +72,15 @@ class OverworldEvent {
     }
 
     const question = new QuestionMessage({
+      map: this.map,
       question: this.event.question,
       answer: this.event.answer,
-      qsnValue: this.event.qsnValue,   // Points to be rewarded for correct answer
+      qsnValue: this.event.qsnValue,     // Points to be rewarded for correct answer
       onComplete: (isCorrect, userAnswer) => {
         console.log(`User answered correctly: ${isCorrect}`);
 
-        if(isCorrect){
-          this.overlay.setMoney(this);
+        if (isCorrect) {
+          this.map.overworld.setMoney(this);
         }
 
         const feedbackMessage = new TextMessage({

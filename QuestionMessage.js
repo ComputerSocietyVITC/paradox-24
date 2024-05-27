@@ -1,5 +1,6 @@
 class QuestionMessage {
-  constructor({ question, answer, qsnValue, onComplete }) {
+  constructor({ map, question, answer, qsnValue, onComplete }) {
+    this.map = map;
     this.question = question;
     this.answer = answer;
     this.qsnValue = qsnValue;      // Points rewarded to each qsn
