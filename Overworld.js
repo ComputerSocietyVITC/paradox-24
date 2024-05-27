@@ -79,37 +79,37 @@ class Overworld {
     this.map.mountObjects();
   }
 
-  setMoney(object){
+  setMoney(object) {
 
-    if(object.event.qsnValue > 0){
-        console.log(object.event.qsnValue);
+    if (object.event.qsnValue > 0) {
+      console.log(object.event.qsnValue);
 
-        this.map.overworld.money += object.event.qsnValue;
-        object.event.qsnValue = 0;
+      this.map.overworld.money += object.event.qsnValue;
+      object.event.qsnValue = 0;
 
-        this.element.innerHTML = (`
+      this.element.innerHTML = (`
         <p class="Hud">Points: ${this.map.overworld.money}</p> 
     `)
     }
     console.log(this.money);
- }
+  }
 
 
- initMoney(container){
+  initMoney(container) {
 
-  //Create the element
-  this.element = document.createElement("div");
-  this.element.classList.add("Hud");
+    //Create the element
+    this.element = document.createElement("div");
+    this.element.classList.add("Hud");
 
-  this.element.innerHTML = (`
+    this.element.innerHTML = (`
       <p class="Hud">Points: ${this.money}</p> 
   `)
 
 
-  container.appendChild(this.element);
+    container.appendChild(this.element);
 
     this.hud = document.querySelector(".Hud");
-}
+  }
 
   init() {
     this.startMap(window.OverworldMaps.DemoRoom);
