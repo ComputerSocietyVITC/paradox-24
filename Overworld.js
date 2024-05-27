@@ -5,52 +5,62 @@ class Overworld {
     this.ctx = this.canvas.getContext("2d");
     this.map = null;
     this.overlay = null;
+    this.isPaused = false; // Track if the game is paused
   }
 
   startGameLoop() {
     const step = () => {
-      //Clear off the canvas
-      this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
+      if (!this.isPaused) { // Only execute if the game is not paused
+        // Clear off the canvas
+        this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
 
-      //Establish the camera person
-      const cameraPerson = this.map.gameObjects.hero;
+        // Establish the camera person
+        const cameraPerson = this.map.gameObjects.hero;
 
-      //Update all objects
-      Object.values(this.map.gameObjects).forEach((object) => {
-        object.update({
-          arrow: this.directionInput.direction,
-          map: this.map,
-        });
-      });
-
-      //Draw Lower layer
-      this.map.drawLowerImage(this.ctx, cameraPerson);
-
-      //Draw Game Objects
-      Object.values(this.map.gameObjects)
-        .sort((a, b) => {
-          return a.y - b.y;
-        })
-        .forEach((object) => {
-          object.sprite.draw(this.ctx, cameraPerson);
+        // Update all objects
+        Object.values(this.map.gameObjects).forEach((object) => {
+          object.update({
+            arrow: this.directionInput.direction,
+            map: this.map,
+          });
         });
 
-      //Draw Upper layer
-      this.map.drawUpperImage(this.ctx, cameraPerson);
-      
-      //Draw Overlay
-      // this.overlay.drawOverlay(this.ctx);
+        // Draw Lower layer
+        this.map.drawLowerImage(this.ctx, cameraPerson);
 
-      requestAnimationFrame(() => {
-        step();
-      });
+        // Draw Game Objects
+        Object.values(this.map.gameObjects)
+          .sort((a, b) => {
+            return a.y - b.y;
+          })
+          .forEach((object) => {
+            object.sprite.draw(this.ctx, cameraPerson);
+          });
+
+        // Draw Upper layer
+        this.map.drawUpperImage(this.ctx, cameraPerson);
+
+        // Draw Overlay
+        // this.overlay.drawOverlay(this.ctx);
+
+        requestAnimationFrame(step);
+      }
     };
     step();
   }
 
+  pauseGame() {
+    this.isPaused = true;
+  }
+
+  resumeGame() {
+    this.isPaused = false;
+    this.startGameLoop();
+  }
+
   bindActionInput() {
     new KeyPressListener("Enter", () => {
-      //Is there a person here to talk to?
+      // Is there a person here to talk to?
       this.map.checkForActionCutscene();
     });
   }
@@ -58,7 +68,7 @@ class Overworld {
   bindHeroPositionCheck() {
     document.addEventListener("PersonWalkingComplete", (e) => {
       if (e.detail.whoId === "hero") {
-        //Hero's position has changed
+        // Hero's position has changed
         this.map.checkForFootstepCutscene();
       }
     });
@@ -70,7 +80,7 @@ class Overworld {
     this.map.mountObjects();
   }
 
-  startOverlay(overlayConfig){
+  startOverlay(overlayConfig) {
     this.overlay = new Overlay(overlayConfig);
     this.overlay.overworld = this;
     this.overlay.init(document.querySelector(".game-container"));
@@ -100,9 +110,11 @@ class Overworld {
       },
     ]);
 
-    // this.map.startCutscene([
-    //   { type: "changeMap", map: "DemoRoom"}
-    //   // { type: "textMessage", text: "This is the very first message!"}
-    // ])
+    // Initialize PauseMenu
+    this.pauseMenu = new PauseMenu({ overworld: this });
+    this.pauseMenu.init();
+
+    // Make overworld globally accessible
+    window.overworld = this;
   }
 }

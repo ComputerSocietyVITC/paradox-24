@@ -1,0 +1,37 @@
+.pause-menu {
+
+    position: fixed;
+    top: 30%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background: rgba(242, 195, 101, 0.8);
+    color: rgb(96, 41, 2);
+    padding: 20px;
+    border-radius: 10px;
+    display: none;
+    z-index: 1000;
+}
+
+.pause-menu-content {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    text-align: center;
+}
+
+.pause-menu .save-button,
+.resume-button,
+.load-button {
+    background: #af724c;
+    color: white;
+    padding: 10px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.pause-menu .save-button:hover,
+.resume-button:hover,
+.load-button:hover {
+    background: #a06b45;
+}

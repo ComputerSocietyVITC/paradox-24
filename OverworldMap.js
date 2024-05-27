@@ -341,4 +341,5 @@ window.OverworldMaps = {
       ],
     },
   },
+
 };
