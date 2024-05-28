@@ -7,7 +7,7 @@ class Overworld {
     this.map = null;
     this.money = 0;         //money
     this.isPaused = false; // Track if the game is paused
-    this.supabase = supabase.createClient('https://your-project-id.supabase.co', 'your-anon-key');
+    this.supabase = supabase.createClient('https://elyjkbpahblqfdfmkjck.supabase.co', 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImVseWprYnBhaGJscWZkZm1ramNrIiwicm9sZSI6ImFub24iLCJpYXQiOjE3MTY5MDgxNzAsImV4cCI6MjAzMjQ4NDE3MH0.SBe4n-q37RrcTA4CtYO9K2AZiZwLnp4mHmOqpxbt5Uc');
   }
 
   async authenticate(email, password, endpoint) {
