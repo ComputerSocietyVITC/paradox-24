@@ -7,6 +7,85 @@ class Overworld {
     this.map = null;
     this.money = 0;         //money
     this.isPaused = false; // Track if the game is paused
+    this.supabase = supabase.createClient('https://your-project-id.supabase.co', 'your-anon-key');
+  }
+
+  async authenticate(email, password, endpoint) {
+    try {
+      let response;
+      if (endpoint === '/login') {
+        response = await this.supabase.auth.signInWithPassword({ email, password });
+      } else if (endpoint === '/signup') {
+        response = await this.supabase.auth.signUp({ email, password });
+      }
+
+      if (response.error) throw response.error;
+      return response.data;
+    } catch (error) {
+      throw new Error(error.message);
+    }
+  }
+
+  init() {
+    this.showLoginScreen();
+  }
+
+  showLoginScreen() {
+    const container = document.querySelector(".game-container");
+    container.innerHTML = `
+      <div class="login-container">
+        <h1>Login</h1>
+        <form id="login-form">
+          <input type="email" id="login-email" placeholder="Email" required>
+          <input type="password" id="login-password" placeholder="Password" required>
+          <button type="submit">Login</button>
+        </form>
+        <p>Don't have an account? <a href="#" id="show-signup">Sign up</a></p>
+      </div>
+      <div class="signup-container" style="display: none;">
+        <h1>Sign Up</h1>
+        <form id="signup-form">
+          <input type="email" id="signup-email" placeholder="Email" required>
+          <input type="password" id="signup-password" placeholder="Password" required>
+          <button type="submit">Sign Up</button>
+        </form>
+        <p>Already have an account? <a href="#" id="show-login">Login</a></p>
+      </div>
+    `;
+
+    document.getElementById("login-form").addEventListener("submit", (e) => {
+      e.preventDefault();
+      const email = document.getElementById("login-email").value;
+      const password = document.getElementById("login-password").value;
+      this.authenticate(email, password, '/login').then(data => {
+        this.startGame();
+      }).catch(error => {
+        alert(error.message);
+      });
+    });
+
+    document.getElementById("signup-form").addEventListener("submit", (e) => {
+      e.preventDefault();
+      const email = document.getElementById("signup-email").value;
+      const password = document.getElementById("signup-password").value;
+      this.authenticate(email, password, '/signup').then(data => {
+        this.startGame();
+      }).catch(error => {
+        alert(error.message);
+      });
+    });
+
+    document.getElementById("show-signup").addEventListener("click", (e) => {
+      e.preventDefault();
+      document.querySelector(".login-container").style.display = "none";
+      document.querySelector(".signup-container").style.display = "block";
+    });
+
+    document.getElementById("show-login").addEventListener("click", (e) => {
+      e.preventDefault();
+      document.querySelector(".signup-container").style.display = "none";
+      document.querySelector(".login-container").style.display = "block";
+    });
   }
 
   startGameLoop() {
