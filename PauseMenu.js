@@ -199,7 +199,7 @@ class PauseMenu {
 
 // Initialize PauseMenu when the window loads
 window.addEventListener("load", async () => {
-    const supabase = createSupabaseClient('https://elyjkbpahblqfdfmkjck.supabase.co', 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImVseWprYnBhaGJscWZkZm1ramNrIiwicm9sZSI6ImFub24iLCJpYXQiOjE3MTY5MDgxNzAsImV4cCI6MjAzMjQ4NDE3MH0.SBe4n-q37RrcTA4CtYO9K2AZiZwLnp4mHmOqpxbt5Uc');
+    const supabase = createSupabaseClient('https://ddctemysdgslailkedsw.supabase.co', 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImRkY3RlbXlzZGdzbGFpbGtlZHN3Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3MTY5NjI4NzYsImV4cCI6MjAzMjUzODg3Nn0.eqTP9vbO-JnyF42oZuf4EMUwOXbTT9pgqRb2uH21X_U');
     const { data: { session } } = await supabase.auth.getSession();
     if (session) {
         const userId = session.user.id;
