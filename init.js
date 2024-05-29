@@ -1,18 +1,27 @@
 (function () {
   // Initialize Supabase client
-  const SUPABASE_URL = 'https://elyjkbpahblqfdfmkjck.supabase.co';
-  const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImVseWprYnBhaGJscWZkZm1ramNrIiwicm9sZSI6ImFub24iLCJpYXQiOjE3MTY5MDgxNzAsImV4cCI6MjAzMjQ4NDE3MH0.SBe4n-q37RrcTA4CtYO9K2AZiZwLnp4mHmOqpxbt5Uc';
+  const SUPABASE_URL = "https://elyjkbpahblqfdfmkjck.supabase.co";
+  const SUPABASE_KEY =
+    "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImVseWprYnBhaGJscWZkZm1ramNrIiwicm9sZSI6ImFub24iLCJpYXQiOjE3MTY5MDgxNzAsImV4cCI6MjAzMjQ4NDE3MH0.SBe4n-q37RrcTA4CtYO9K2AZiZwLnp4mHmOqpxbt5Uc";
   const supabase = createSupabaseClient(SUPABASE_URL, SUPABASE_KEY);
 
   async function signInWithGoogle() {
-    const { error } = await supabase.auth.signInWithOAuth({ provider: 'google' });
-    if (error) {
-      console.error("Error logging in:", error);
+    try {
+      const { error } = await supabase.auth.signInWithOAuth({
+        provider: "google",
+      });
+      if (error) {
+        console.error("Error logging in:", error.message);
+      }
+    } catch (error) {
+      console.error("Error signing in with google:", error.message);
     }
   }
 
   async function checkAuth() {
-    const { data: { session } } = await supabase.auth.getSession();
+    const {
+      data: { session },
+    } = await supabase.auth.getSession();
     if (session) {
       initializeGame();
     } else {
@@ -21,8 +30,8 @@
   }
 
   function displayLoginScreen() {
-    const loginContainer = document.createElement('div');
-    loginContainer.classList.add('login-container');
+    const loginContainer = document.createElement("div");
+    loginContainer.classList.add("login-container");
     loginContainer.innerHTML = `
       <div class="login-content">
         <h1>Login With</h1>
@@ -39,8 +48,8 @@
     `;
     document.body.appendChild(loginContainer);
 
-    const loginButton = document.getElementById('login-button');
-    loginButton.addEventListener('click', () => {
+    const loginButton = document.getElementById("login-button");
+    loginButton.addEventListener("click", () => {
       signInWithGoogle();
     });
 
@@ -55,7 +64,7 @@
 
   function initializeGame() {
     const overworld = new Overworld({
-      element: document.querySelector(".game-container")
+      element: document.querySelector(".game-container"),
     });
     overworld.init();
   }
@@ -68,32 +77,37 @@
     return {
       auth: {
         signInWithOAuth: async ({ provider }) => {
-          const response = await fetch(`${url}/auth/v1/oauth/authorize?provider=${provider}`, {
-            method: 'GET',
-            headers: {
-              'apikey': key,
-              'Content-Type': 'application/json'
+          const response = await fetch(
+            `${url}/auth/v1/oauth/authorize?provider=${provider}`,
+            {
+              method: "GET",
+              headers: {
+                apikey: key,
+                "Content-Type": "application/json",
+              },
             }
-          });
+          );
 
           if (!response.ok) {
-            throw new Error(`Error signing in with ${provider}: ${response.statusText}`);
+            throw new Error(
+              `Error signing in with ${provider}: ${response.statusText}`
+            );
           }
 
           const data = await response.json();
           return data;
         },
         getSession: async () => {
-          const session = localStorage.getItem('supabase.auth.token');
+          const session = localStorage.getItem("supabase.auth.token");
           return { data: { session: session ? JSON.parse(session) : null } };
         },
         onAuthStateChange: (callback) => {
-          window.addEventListener('storage', () => {
-            const session = localStorage.getItem('supabase.auth.token');
+          window.addEventListener("storage", () => {
+            const session = localStorage.getItem("supabase.auth.token");
             callback(null, session ? JSON.parse(session) : null);
           });
-        }
-      }
+        },
+      },
     };
   }
 })();
