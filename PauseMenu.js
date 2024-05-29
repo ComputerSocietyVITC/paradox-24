@@ -17,6 +17,7 @@ class PauseMenu {
           <button class="save-button">Save Game</button>
           <button class="load-button">Load Game</button>
           <button class="resume-button">Resume</button>
+          <button class="sign-out-button">Sign Out</button>
         </div>
       `;
 
@@ -39,6 +40,24 @@ class PauseMenu {
             this.closeMenu();
             this.overworld.resumeGame();
         });
+
+        const signOutButton = this.element.querySelector(".sign-out-button");
+        signOutButton.addEventListener("click", () => {
+            this.signOutUser();
+        });
+    }
+
+    async signOutUser() {
+        try {
+            const { error } = await this.supabase.auth.signOut();
+            if (error) {
+                throw error;
+            }
+            // Redirect to the login page or perform any other necessary actions
+            console.log('User signed out successfully');
+        } catch (error) {
+            console.error('Error signing out:', error);
+        }
     }
 
     toggleMenu() {
