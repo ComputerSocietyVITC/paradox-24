@@ -1,121 +1,10 @@
 class PauseMenu {
-
-    constructor(config, { overworld }) {
-        this.overworld = overworld;
-        this.supabase = overworld.supabase;
+    constructor(config) {
         this.overworld = config.overworld;
         this.isOpen = false;
         this.element = null;
-    }
-
-    async saveGame() {
-        const user = this.supabase.auth.user();
-        if (!user) {
-            alert("User not authenticated.");
-            return;
-        }
-
-        const overworld = this.overworld;
-        const map = this.overworld.map;
-        const gameObjects = map.gameObjects;
-
-        const gameData = {
-            mapName: map.mapName,
-            money: overworld.money,
-            progress: map.currentEventIndex || 0,
-            gameObjects: Object.entries(gameObjects).reduce((acc, [key, obj]) => {
-                acc[key] = {
-                    x: obj.x,
-                    y: obj.y,
-                    direction: obj.direction,
-                    behaviorLoop: obj.behaviorLoop,
-                    talking: obj.talking,
-                };
-                return acc;
-            }, {}),
-            cutsceneSpaces: map.cutsceneSpaces,
-            walls: map.walls,
-        };
-
-        try {
-            const { data, error } = await this.supabase
-                .from('game_data')
-                .upsert({ user_id: user.id, data: gameData });
-
-            if (error) throw error;
-            alert("Game saved successfully!");
-        } catch (error) {
-            console.error("Error saving game:", error);
-            alert("Error saving game.");
-        }
-    }
-
-    async loadGame() {
-        const user = this.supabase.auth.user();
-        if (!user) {
-            alert("User not authenticated.");
-            return;
-        }
-
-        try {
-            const { data, error } = await this.supabase
-                .from('game_data')
-                .select('data')
-                .eq('user_id', user.id)
-                .single();
-
-            if (error) throw error;
-
-            const gameData = data.data;
-            if (gameData) {
-                const overworld = this.overworld;
-                const mapName = gameData.mapName;
-                const mapConfig = window.OverworldMaps[mapName];
-
-                if (mapConfig) {
-                    this.overworld.map = new OverworldMap(mapConfig);
-
-                    const hero = this.overworld.map.gameObjects.hero;
-                    const gameObjects = gameData.gameObjects;
-
-                    // Set game objects' positions and other properties
-                    Object.entries(gameObjects).forEach(([key, obj]) => {
-                        const gameObject = this.overworld.map.gameObjects[key];
-                        if (gameObject) {
-                            gameObject.x = obj.x;
-                            gameObject.y = obj.y;
-                            gameObject.direction = obj.direction;
-                            gameObject.behaviorLoop = obj.behaviorLoop;
-                            gameObject.talking = obj.talking;
-                        }
-                    });
-
-                    // Set hero's position
-                    hero.x = gameObjects.hero.x;
-                    hero.y = gameObjects.hero.y;
-
-                    // Update points and other game data
-                    overworld.money = gameData.money;
-                    this.overworld.map.currentEventIndex = gameData.progress;
-                    this.overworld.map.cutsceneSpaces = gameData.cutsceneSpaces;
-                    this.overworld.map.walls = gameData.walls;
-                    overworld.hud.innerHTML = `
-                <p class="Hud">Points: ${overworld.money}</p>
-              `;
-                    this.overworld.map.overworld = overworld;
-                    this.overworld.map.mountObjects();
-
-                    alert("Game loaded successfully!");
-                } else {
-                    console.error("Map configuration not found for map name:", mapName);
-                }
-            } else {
-                alert("No saved game data found.");
-            }
-        } catch (error) {
-            console.error("Error loading game:", error);
-            alert("Error loading game.");
-        }
+        this.supabase = config.supabase;
+        this.userId = config.userId;
     }
 
     createMenu() {
@@ -176,99 +65,109 @@ class PauseMenu {
         this.isOpen = false;
     }
 
-    // saveGame() {
-    //     if (!this.overworld) {
-    //         console.error("Overworld is not defined.");
-    //         return;
-    //     }
+    async saveGame() {
+        if (!this.overworld) {
+            console.error("Overworld is not defined.");
+            return;
+        }
 
-    //     const overworld = this.overworld;
-    //     const map = this.overworld.map;
-    //     const gameObjects = map.gameObjects;
+        const overworld = this.overworld;
+        const map = this.overworld.map;
+        const gameObjects = map.gameObjects;
 
-    //     const gameData = {
-    //         mapName: map.mapName,
-    //         money: overworld.money,
-    //         progress: map.currentEventIndex || 0,
-    //         gameObjects: Object.entries(gameObjects).reduce((acc, [key, obj]) => {
-    //             acc[key] = {
-    //                 x: obj.x,
-    //                 y: obj.y,
-    //                 direction: obj.direction,
-    //                 behaviorLoop: obj.behaviorLoop,
-    //                 talking: obj.talking,
+        const gameData = {
+            mapName: map.mapName,
+            money: overworld.money,
+            progress: map.currentEventIndex || 0,
+            gameObjects: Object.entries(gameObjects).reduce((acc, [key, obj]) => {
+                acc[key] = {
+                    x: obj.x,
+                    y: obj.y,
+                    direction: obj.direction,
+                    behaviorLoop: obj.behaviorLoop,
+                    talking: obj.talking,
+                };
+                return acc;
+            }, {}),
+            cutsceneSpaces: map.cutsceneSpaces,
+            walls: map.walls,
+        };
 
-    //             };
-    //             return acc;
-    //         }, {}),
-    //         cutsceneSpaces: map.cutsceneSpaces,
-    //         walls: map.walls,
+        try {
+            const { data, error } = await this.supabase
+                .from('game_saves')
+                .upsert([{ user_id: this.userId, game_data: gameData }], { onConflict: ['user_id'] });
 
-    //     };
+            if (error) {
+                throw error;
+            }
+            alert("Game saved successfully!");
+        } catch (error) {
+            console.error("Error saving game:", error);
+            alert("Failed to save game.");
+        }
+    }
 
-    //     localStorage.setItem('gameData', JSON.stringify(gameData));
-    //     const jsonData = JSON.stringify(gameData);
-    //     const blob = new Blob([jsonData], { type: "application/json" });
-    //     const url = URL.createObjectURL(blob);
-    //     const a = document.createElement("a");
-    //     a.href = url;
-    //     a.download = "game-save.json";
-    //     a.click();
-    //     URL.revokeObjectURL(url);
+    async loadGame() {
+        try {
+            const { data, error } = await this.supabase
+                .from('game_saves')
+                .select('game_data')
+                .eq('user_id', this.userId)
+                .single();
 
-    //     alert("Game saved successfully!");
-    // }
+            if (error) {
+                throw error;
+            }
 
+            const gameData = data.game_data;
+            if (gameData) {
+                const overworld = this.overworld;
+                const mapName = gameData.mapName;
+                const mapConfig = window.OverworldMaps[mapName];
 
-    // loadGame() {
-    //     const gameData = JSON.parse(localStorage.getItem('gameData'));
-    //     if (gameData) {
-    //         const overworld = this.overworld;
-    //         const mapName = gameData.mapName;
-    //         const mapConfig = window.OverworldMaps[mapName];
+                if (mapConfig) {
+                    this.overworld.map = new OverworldMap(mapConfig);
 
-    //         if (mapConfig) {
-    //             this.overworld.map = new OverworldMap(mapConfig);
+                    const hero = this.overworld.map.gameObjects.hero;
+                    const gameObjects = gameData.gameObjects;
 
-    //             const hero = this.overworld.map.gameObjects.hero;
-    //             const gameObjects = gameData.gameObjects;
+                    Object.entries(gameObjects).forEach(([key, obj]) => {
+                        const gameObject = this.overworld.map.gameObjects[key];
+                        if (gameObject) {
+                            gameObject.x = obj.x;
+                            gameObject.y = obj.y;
+                            gameObject.direction = obj.direction;
+                            gameObject.behaviorLoop = obj.behaviorLoop;
+                            gameObject.talking = obj.talking;
+                        }
+                    });
 
-    //             // Set game objects' positions and other properties
-    //             Object.entries(gameObjects).forEach(([key, obj]) => {
-    //                 const gameObject = this.overworld.map.gameObjects[key];
-    //                 if (gameObject) {
-    //                     gameObject.x = obj.x;
-    //                     gameObject.y = obj.y;
-    //                     gameObject.direction = obj.direction;
-    //                     gameObject.behaviorLoop = obj.behaviorLoop;
-    //                     gameObject.talking = obj.talking;
-    //                     // Set any other relevant properties of the game objects
-    //                 }
-    //             });
+                    hero.x = gameObjects.hero.x;
+                    hero.y = gameObjects.hero.y;
 
-    //             // Set hero's position
-    //             hero.x = gameObjects.hero.x;
-    //             hero.y = gameObjects.hero.y;
+                    overworld.money = gameData.money;
+                    this.overworld.map.currentEventIndex = gameData.progress;
+                    this.overworld.map.cutsceneSpaces = gameData.cutsceneSpaces;
+                    this.overworld.map.walls = gameData.walls;
+                    overworld.hud.innerHTML = `
+              <p class="Hud">Points: ${overworld.money}</p>
+            `;
+                    this.overworld.map.overworld = overworld;
+                    this.overworld.map.mountObjects();
 
-    //             // Update points and other game data
-    //             overworld.money = gameData.money;
-    //             this.overworld.map.currentEventIndex = gameData.progress;
-    //             this.overworld.map.cutsceneSpaces = gameData.cutsceneSpaces;
-    //             this.overworld.map.walls = gameData.walls;
-    //             overworld.hud.innerHTML = `
-    //               <p class="Hud">Points: ${overworld.money}</p>
-    //             `;
-    //             this.overworld.map.overworld = overworld;
-    //             this.overworld.map.mountObjects();
-
-    //             alert("Game loaded successfully!");
-    //         } else {
-    //             console.error("Map configuration not found for map name:", mapName);
-    //         }
-    //     } else {
-    //         alert("No saved game data found.");
-    //     }
-    // }
+                    alert("Game loaded successfully!");
+                } else {
+                    console.error("Map configuration not found for map name:", mapName);
+                }
+            } else {
+                alert("No saved game data found.");
+            }
+        } catch (error) {
+            console.error("Error loading game:", error);
+            alert("Failed to load game.");
+        }
+    }
 
     init() {
         document.addEventListener("keydown", (event) => {
@@ -280,14 +179,82 @@ class PauseMenu {
 }
 
 // Initialize PauseMenu when the window loads
-window.addEventListener("load", () => {
-    const overworld = window.overworld;
-    if (overworld) {
-        const pauseMenu = new PauseMenu({ overworld: overworld });
+window.addEventListener("load", async () => {
+    const supabase = createSupabaseClient('https://elyjkbpahblqfdfmkjck.supabase.co', 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImVseWprYnBhaGJscWZkZm1ramNrIiwicm9sZSI6ImFub24iLCJpYXQiOjE3MTY5MDgxNzAsImV4cCI6MjAzMjQ4NDE3MH0.SBe4n-q37RrcTA4CtYO9K2AZiZwLnp4mHmOqpxbt5Uc');
+    const { data: { session } } = await supabase.auth.getSession();
+    if (session) {
+        const userId = session.user.id;
+        const overworld = new Overworld({
+            element: document.querySelector(".game-container")
+        });
+        overworld.init();
+
+        const pauseMenu = new PauseMenu({ overworld, supabase, userId });
         pauseMenu.init();
     } else {
-        console.error("Overworld is not defined on window.");
+        console.error("User is not authenticated.");
     }
 });
 
-
+// Supabase client creation
+function createSupabaseClient(url, key) {
+    return {
+        auth: {
+            signInWithOAuth: async ({ provider }) => {
+                return await fetch(`${url}/auth/v1/oauth/authorize?provider=${provider}`, {
+                    method: 'GET',
+                    headers: {
+                        'apikey': key,
+                        'Content-Type': 'application/json'
+                    }
+                }).then(res => res.json());
+            },
+            getSession: async () => {
+                const session = localStorage.getItem('supabase.auth.token');
+                return { data: { session: session ? JSON.parse(session) : null } };
+            },
+            onAuthStateChange: (callback) => {
+                window.addEventListener('storage', () => {
+                    const session = localStorage.getItem('supabase.auth.token');
+                    callback(null, session ? JSON.parse(session) : null);
+                });
+            }
+        },
+        from: (table) => {
+            return {
+                select: async (columns) => {
+                    return await fetch(`${url}/rest/v1/${table}?select=${columns}`, {
+                        headers: {
+                            'apikey': key,
+                            'Authorization': `Bearer ${localStorage.getItem('supabase.auth.token')}`
+                        }
+                    }).then(res => res.json());
+                },
+                upsert: async (data, options) => {
+                    return await fetch(`${url}/rest/v1/${table}`, {
+                        method: 'POST',
+                        headers: {
+                            'apikey': key,
+                            'Authorization': `Bearer ${localStorage.getItem('supabase.auth.token')}`,
+                            'Content-Type': 'application/json',
+                            'Prefer': 'resolution=merge-duplicates'
+                        },
+                        body: JSON.stringify(data)
+                    }).then(res => res.json());
+                },
+                eq: (column, value) => {
+                    return {
+                        single: async () => {
+                            return await fetch(`${url}/rest/v1/${table}?${column}=eq.${value}`, {
+                                headers: {
+                                    'apikey': key,
+                                    'Authorization': `Bearer ${localStorage.getItem('supabase.auth.token')}`
+                                }
+                            }).then(res => res.json());
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
