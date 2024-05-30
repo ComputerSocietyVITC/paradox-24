@@ -199,8 +199,8 @@ class PauseMenu {
 
 // Initialize PauseMenu when the window loads
 window.addEventListener("load", async () => {
-    const supabase = createSupabaseClient('https://ddctemysdgslailkedsw.supabase.co', 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImRkY3RlbXlzZGdzbGFpbGtlZHN3Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3MTY5NjI4NzYsImV4cCI6MjAzMjUzODg3Nn0.eqTP9vbO-JnyF42oZuf4EMUwOXbTT9pgqRb2uH21X_U');
-    const { data: { session } } = await supabase.auth.getSession();
+    const _supabase = supabase.createClient('https://ddctemysdgslailkedsw.supabase.co', 'eyJhbGciOiJIUzI2NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImRkY3RlbXlzZGdzbGFpbGtlZHN3Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3MTY5NjI4NzYsImV4cCI6MjAzMjUzODg3Nn0.eqTP9vbO-JnyF42oZuf4EMUwOXbTT9pgqRb2uH21X_U');
+    const { data: { session } } = await _supabase.auth.getSession();
     if (session) {
         const userId = session.user.id;
         const overworld = new Overworld({
@@ -208,72 +208,9 @@ window.addEventListener("load", async () => {
         });
         overworld.init();
 
-        const pauseMenu = new PauseMenu({ overworld, supabase, userId });
+        const pauseMenu = new PauseMenu({ overworld, supabase: _supabase, userId });
         pauseMenu.init();
     } else {
         console.error("User is not authenticated.");
     }
 });
-
-// Supabase client creation
-function createSupabaseClient(url, key) {
-    return {
-        auth: {
-            signInWithOAuth: async ({ provider }) => {
-                return await fetch(`${url}/auth/v1/oauth/authorize?provider=${provider}`, {
-                    method: 'GET',
-                    headers: {
-                        'apikey': key,
-                        'Content-Type': 'application/json'
-                    }
-                }).then(res => res.json());
-            },
-            getSession: async () => {
-                const session = localStorage.getItem('supabase.auth.token');
-                return { data: { session: session ? JSON.parse(session) : null } };
-            },
-            onAuthStateChange: (callback) => {
-                window.addEventListener('storage', () => {
-                    const session = localStorage.getItem('supabase.auth.token');
-                    callback(null, session ? JSON.parse(session) : null);
-                });
-            }
-        },
-        from: (table) => {
-            return {
-                select: async (columns) => {
-                    return await fetch(`${url}/rest/v1/${table}?select=${columns}`, {
-                        headers: {
-                            'apikey': key,
-                            'Authorization': `Bearer ${localStorage.getItem('supabase.auth.token')}`
-                        }
-                    }).then(res => res.json());
-                },
-                upsert: async (data, options) => {
-                    return await fetch(`${url}/rest/v1/${table}`, {
-                        method: 'POST',
-                        headers: {
-                            'apikey': key,
-                            'Authorization': `Bearer ${localStorage.getItem('supabase.auth.token')}`,
-                            'Content-Type': 'application/json',
-                            'Prefer': 'resolution=merge-duplicates'
-                        },
-                        body: JSON.stringify(data)
-                    }).then(res => res.json());
-                },
-                eq: (column, value) => {
-                    return {
-                        single: async () => {
-                            return await fetch(`${url}/rest/v1/${table}?${column}=eq.${value}`, {
-                                headers: {
-                                    'apikey': key,
-                                    'Authorization': `Bearer ${localStorage.getItem('supabase.auth.token')}`
-                                }
-                            }).then(res => res.json());
-                        }
-                    }
-                }
-            }
-        }
-    }
-}

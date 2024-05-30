@@ -3,11 +3,11 @@
   const SUPABASE_URL = "https://ddctemysdgslailkedsw.supabase.co";
   const SUPABASE_KEY =
     "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImRkY3RlbXlzZGdzbGFpbGtlZHN3Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3MTY5NjI4NzYsImV4cCI6MjAzMjUzODg3Nn0.eqTP9vbO-JnyF42oZuf4EMUwOXbTT9pgqRb2uH21X_U";
-  const supabase = createSupabaseClient(SUPABASE_URL, SUPABASE_KEY);
+  const _supabase = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 
   async function signInWithGoogle() {
     try {
-      const { error } = await supabase.auth.signInWithOAuth({
+      const { error } = await _supabase.auth.signInWithOAuth({
         provider: "google",
       });
       if (error) {
@@ -21,7 +21,7 @@
   async function checkAuth() {
     const {
       data: { session },
-    } = await supabase.auth.getSession();
+    } = await _supabase.auth.getSession();
     if (session) {
       initializeGame();
     } else {
@@ -54,7 +54,7 @@
     });
 
     // Listen for authentication changes
-    supabase.auth.onAuthStateChange((_event, session) => {
+    _supabase.auth.onAuthStateChange((_event, session) => {
       if (session) {
         document.body.removeChild(loginContainer);
         initializeGame();
@@ -71,43 +71,4 @@
 
   // Check authentication status on page load
   checkAuth();
-
-  // Supabase client creation
-  function createSupabaseClient(url, key) {
-    return {
-      auth: {
-        signInWithOAuth: async ({ provider }) => {
-          const response = await fetch(
-            `${url}/auth/v1/oauth/authorize?provider=${provider}`,
-            {
-              method: "GET",
-              headers: {
-                apikey: key,
-                "Content-Type": "application/json",
-              },
-            }
-          );
-
-          if (!response.ok) {
-            throw new Error(
-              `Error signing in with ${provider}: ${response.statusText}`
-            );
-          }
-
-          const data = await response.json();
-          return data;
-        },
-        getSession: async () => {
-          const session = localStorage.getItem("supabase.auth.token");
-          return { data: { session: session ? JSON.parse(session) : null } };
-        },
-        onAuthStateChange: (callback) => {
-          window.addEventListener("storage", () => {
-            const session = localStorage.getItem("supabase.auth.token");
-            callback(null, session ? JSON.parse(session) : null);
-          });
-        },
-      },
-    };
-  }
 })();
