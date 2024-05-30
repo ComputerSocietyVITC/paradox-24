@@ -19,7 +19,7 @@ class Person extends GameObject {
     } else {
       //More cases for starting to walk will come here
       //
-      //
+      // 
 
       //Case: We're keyboard ready and have an arrow pressed
       if (

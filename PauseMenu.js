@@ -3,6 +3,8 @@ class PauseMenu {
         this.overworld = config.overworld;
         this.isOpen = false;
         this.element = null;
+        this.supabase = config.supabase;
+        this.userId = config.userId;
     }
 
     createMenu() {
@@ -15,6 +17,7 @@ class PauseMenu {
           <button class="save-button">Save Game</button>
           <button class="load-button">Load Game</button>
           <button class="resume-button">Resume</button>
+          <button class="sign-out-button">Sign Out</button>
         </div>
       `;
 
@@ -37,6 +40,24 @@ class PauseMenu {
             this.closeMenu();
             this.overworld.resumeGame();
         });
+
+        const signOutButton = this.element.querySelector(".sign-out-button");
+        signOutButton.addEventListener("click", () => {
+            this.signOutUser();
+        });
+    }
+
+    async signOutUser() {
+        try {
+            const { error } = await this.supabase.auth.signOut();
+            if (error) {
+                throw error;
+            }
+            // Redirect to the login page or perform any other necessary actions
+            console.log('User signed out successfully');
+        } catch (error) {
+            console.error('Error signing out:', error);
+        }
     }
 
     toggleMenu() {
@@ -63,7 +84,7 @@ class PauseMenu {
         this.isOpen = false;
     }
 
-    saveGame() {
+    async saveGame() {
         if (!this.overworld) {
             console.error("Overworld is not defined.");
             return;
@@ -84,76 +105,86 @@ class PauseMenu {
                     direction: obj.direction,
                     behaviorLoop: obj.behaviorLoop,
                     talking: obj.talking,
-
                 };
                 return acc;
             }, {}),
             cutsceneSpaces: map.cutsceneSpaces,
             walls: map.walls,
-
         };
 
-        localStorage.setItem('gameData', JSON.stringify(gameData));
-        const jsonData = JSON.stringify(gameData);
-        const blob = new Blob([jsonData], { type: "application/json" });
-        const url = URL.createObjectURL(blob);
-        const a = document.createElement("a");
-        a.href = url;
-        a.download = "game-save.json";
-        a.click();
-        URL.revokeObjectURL(url);
+        try {
+            const { data, error } = await this.supabase
+                .from('game_saves')
+                .upsert([{ user_id: this.userId, game_data: gameData }], { onConflict: ['user_id'] });
 
-        alert("Game saved successfully!");
+            if (error) {
+                throw error;
+            }
+            alert("Game saved successfully!");
+        } catch (error) {
+            console.error("Error saving game:", error);
+            alert("Failed to save game.");
+        }
     }
 
+    async loadGame() {
+        try {
+            const { data, error } = await this.supabase
+                .from('game_saves')
+                .select('game_data')
+                .eq('user_id', this.userId)
+                .single();
 
-    loadGame() {
-        const gameData = JSON.parse(localStorage.getItem('gameData'));
-        if (gameData) {
-            const overworld = this.overworld;
-            const mapName = gameData.mapName;
-            const mapConfig = window.OverworldMaps[mapName];
-
-            if (mapConfig) {
-                this.overworld.map = new OverworldMap(mapConfig);
-
-                const hero = this.overworld.map.gameObjects.hero;
-                const gameObjects = gameData.gameObjects;
-
-                // Set game objects' positions and other properties
-                Object.entries(gameObjects).forEach(([key, obj]) => {
-                    const gameObject = this.overworld.map.gameObjects[key];
-                    if (gameObject) {
-                        gameObject.x = obj.x;
-                        gameObject.y = obj.y;
-                        gameObject.direction = obj.direction;
-                        gameObject.behaviorLoop = obj.behaviorLoop;
-                        gameObject.talking = obj.talking;
-                        // Set any other relevant properties of the game objects
-                    }
-                });
-
-                // Set hero's position
-                hero.x = gameObjects.hero.x;
-                hero.y = gameObjects.hero.y;
-
-                // Update points and other game data
-                overworld.money = gameData.money;
-                this.overworld.map.currentEventIndex = gameData.progress;
-                this.overworld.map.cutsceneSpaces = gameData.cutsceneSpaces;
-                this.overworld.map.walls = gameData.walls;
-                overworld.hud.innerHTML = `
-                  <p class="Hud">Points: ${overworld.money}</p>
-                `;
-                this.overworld.map.overworld = overworld;
-                this.overworld.map.mountObjects();
-
-                alert("Game loaded successfully!");
-            } else {
-                console.error("Map configuration not found for map name:", mapName);
+            if (error) {
+                throw error;
             }
-        } else {
-            alert("No saved game data found.");
+
+            const gameData = data.game_data;
+            if (gameData) {
+                const overworld = this.overworld;
+                const mapName = gameData.mapName;
+                const mapConfig = window.OverworldMaps[mapName];
+
+                if (mapConfig) {
+                    this.overworld.map = new OverworldMap(mapConfig);
+
+                    const hero = this.overworld.map.gameObjects.hero;
+                    const gameObjects = gameData.gameObjects;
+
+                    Object.entries(gameObjects).forEach(([key, obj]) => {
+                        const gameObject = this.overworld.map.gameObjects[key];
+                        if (gameObject) {
+                            gameObject.x = obj.x;
+                            gameObject.y = obj.y;
+                            gameObject.direction = obj.direction;
+                            gameObject.behaviorLoop = obj.behaviorLoop;
+                            gameObject.talking = obj.talking;
+                        }
+                    });
+
+                    hero.x = gameObjects.hero.x;
+                    hero.y = gameObjects.hero.y;
+
+                    overworld.money = gameData.money;
+                    this.overworld.map.currentEventIndex = gameData.progress;
+                    this.overworld.map.cutsceneSpaces = gameData.cutsceneSpaces;
+                    this.overworld.map.walls = gameData.walls;
+                    overworld.hud.innerHTML = `
+              <p class="Hud">Points: ${overworld.money}</p>
+            `;
+                    this.overworld.map.overworld = overworld;
+                    this.overworld.map.mountObjects();
+
+                    alert("Game loaded successfully!");
+                } else {
+                    console.error("Map configuration not found for map name:", mapName);
+                }
+            } else {
+                alert("No saved game data found.");
+            }
+        } catch (error) {
+            console.error("Error loading game:", error);
+            alert("Failed to load game.");
         }
     }
 
@@ -167,14 +198,19 @@ class PauseMenu {
 }
 
 // Initialize PauseMenu when the window loads
-window.addEventListener("load", () => {
-    const overworld = window.overworld;
-    if (overworld) {
-        const pauseMenu = new PauseMenu({ overworld: overworld });
+window.addEventListener("load", async () => {
+    const _supabase = supabase.createClient('https://ddctemysdgslailkedsw.supabase.co', 'eyJhbGciOiJIUzI2NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImRkY3RlbXlzZGdzbGFpbGtlZHN3Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3MTY5NjI4NzYsImV4cCI6MjAzMjUzODg3Nn0.eqTP9vbO-JnyF42oZuf4EMUwOXbTT9pgqRb2uH21X_U');
+    const { data: { session } } = await _supabase.auth.getSession();
+    if (session) {
+        const userId = session.user.id;
+        const overworld = new Overworld({
+            element: document.querySelector(".game-container")
+        });
+        overworld.init();
+
+        const pauseMenu = new PauseMenu({ overworld, supabase: _supabase, userId });
         pauseMenu.init();
     } else {
-        console.error("Overworld is not defined on window.");
+        console.error("User is not authenticated.");
     }
 });
-
-
