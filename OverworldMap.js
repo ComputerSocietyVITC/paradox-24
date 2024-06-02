@@ -43,7 +43,7 @@ class OverworldMap {
 
     // Special case for ledges
     const isLedge = this.ledges[`${currentX},${currentY}`];
-    if (isLedge && direction == "up") {
+    if (isLedge && direction !== "down") {
       return true; // Block movement unless it's downward
     }
 
