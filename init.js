@@ -70,5 +70,6 @@
   }
 
   // Check authentication status on page load
-  checkAuth();
+  // checkAuth();
+  initializeGame();
 })();
