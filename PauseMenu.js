@@ -177,6 +177,7 @@ class PauseMenu {
                     this.overworld.map.overworld = overworld;
                     this.overworld.map.mountObjects();
 
+
                     alert("Game loaded successfully!");
                 } else {
                     console.error("Map configuration not found for map name:", mapName);

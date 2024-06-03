@@ -52,9 +52,12 @@ class Overworld {
   }
 
   resumeGame() {
-    this.isPaused = false;
-    this.startGameLoop();
+    if (this.isPaused) {
+      this.isPaused = false;
+      this.startGameLoop(); // Call startGameLoop() only if the game was paused
+    }
   }
+
 
   bindActionInput() {
     new KeyPressListener("Enter", () => {
