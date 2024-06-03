@@ -53,8 +53,8 @@ class PauseMenu {
             if (error) {
                 throw error;
             }
-            // Redirect to the login page or perform any other necessary actions
-            console.log('User signed out successfully');
+            // Redirect to the login page
+            window.location.href = "index.html";
         } catch (error) {
             console.error('Error signing out:', error);
         }
@@ -110,6 +110,7 @@ class PauseMenu {
             }, {}),
             cutsceneSpaces: map.cutsceneSpaces,
             walls: map.walls,
+            ledges: map.ledges,
         };
 
         try {
@@ -169,6 +170,7 @@ class PauseMenu {
                     this.overworld.map.currentEventIndex = gameData.progress;
                     this.overworld.map.cutsceneSpaces = gameData.cutsceneSpaces;
                     this.overworld.map.walls = gameData.walls;
+                    this.overworld.map.ledges = gameData.ledges;
                     overworld.hud.innerHTML = `
               <p class="Hud">Points: ${overworld.money}</p>
             `;
@@ -199,7 +201,10 @@ class PauseMenu {
 
 // Initialize PauseMenu when the window loads
 window.addEventListener("load", async () => {
-    const _supabase = supabase.createClient('https://ddctemysdgslailkedsw.supabase.co', 'eyJhbGciOiJIUzI2NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImRkY3RlbXlzZGdzbGFpbGtlZHN3Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3MTY5NjI4NzYsImV4cCI6MjAzMjUzODg3Nn0.eqTP9vbO-JnyF42oZuf4EMUwOXbTT9pgqRb2uH21X_U');
+    const SUPABASE_URL = "https://ddctemysdgslailkedsw.supabase.co";
+    const SUPABASE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImRkY3RlbXlzZGdzbGFpbGtlZHN3Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3MTY5NjI4NzYsImV4cCI6MjAzMjUzODg3Nn0.eqTP9vbO-JnyF42oZuf4EMUwOXbTT9pgqRb2uH21X_U";
+    const _supabase = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+
     const { data: { session } } = await _supabase.auth.getSession();
     if (session) {
         const userId = session.user.id;
@@ -212,5 +217,6 @@ window.addEventListener("load", async () => {
         pauseMenu.init();
     } else {
         console.error("User is not authenticated.");
+        window.location.href = "index.html";
     }
 });

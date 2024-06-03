@@ -19,9 +19,7 @@
     text-align: center;
 }
 
-.pause-menu .save-button,
-.resume-button,
-.load-button {
+button {
     background: #af724c;
     color: white;
     padding: 10px;
@@ -30,8 +28,6 @@
     cursor: pointer;
 }
 
-.pause-menu .save-button:hover,
-.resume-button:hover,
-.load-button:hover {
+button:hover {
     background: #a06b45;
 }
