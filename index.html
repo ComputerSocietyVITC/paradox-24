@@ -1,44 +1,24 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 
 <head>
-  <title>Paradox</title>
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
-  <link rel="stylesheet" type="text/css" href="/styles/login.css" />
-  <link href="/styles/global.css" type="text/css" rel="stylesheet" />
-  <link href="/styles/hud.css" type="text/css" rel="stylesheet" />
-  <link href="/styles/TextMessage.css" type="text/css" rel="stylesheet" />
-  <link href="/styles/SceneTransition.css" type="text/css" rel="stylesheet" />
-  <link href="/styles/PauseMenu.css" type="text/css" rel="stylesheet" />
-  <link rel="stylesheet" type="text/css" href="/styles/QuestionMessage.css" />
-
-
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login</title>
+    <link rel="stylesheet" type="text/css" href="/styles/login.css" />
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js"></script>
+    <script src="/index.js" defer></script>
 </head>
 
 <body>
-  <div class="game-container">
-    <canvas class="game-canvas" width="352" height="198"></canvas>
-  </div>
-
-  <!-- Scripts -->
-  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js"></script>
-  <script src="/utils.js"></script>
-  <script src="/DirectionInput.js"></script>
-  <script src="/PauseMenu.js"></script>
-  <script src="/Overworld.js"></script>
-  <script src="/GameObject.js"></script>
-  <script src="/Person.js"></script>
-  <script src="/Sprite.js"></script>
-  <script src="/OverworldMap.js"></script>
-  <script src="/OverworldEvent.js"></script>
-  <script src="/TextMessage.js"></script>
-  <script src="/QuestionMessage.js"></script>
-  <script src="/KeyPressListener.js"></script>
-  <script src="/RevealingText.js"></script>
-  <script src="/SceneTransition.js"></script>
-  <script src="/init.js"></script>
+    <div id="login-container" class="login-container">
+        <div class="login-content">
+            <h1>Login With</h1>
+            <button id="login-button">
+                <span>G</span><span>o</span><span>o</span><span>g</span><span>l</span><span>e</span>
+            </button>
+        </div>
+    </div>
 </body>
 
 </html>

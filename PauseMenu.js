@@ -37,6 +37,24 @@ class PauseMenu {
       this.closeMenu();
       this.overworld.resumeGame();
     });
+
+    const signOutButton = this.element.querySelector(".sign-out-button");
+    signOutButton.addEventListener("click", () => {
+      this.signOutUser();
+    });
+  }
+
+  async signOutUser() {
+    try {
+      const { error } = await this.supabase.auth.signOut();
+      if (error) {
+        throw error;
+      }
+      // Redirect to the login page
+      window.location.href = "index.html";
+    } catch (error) {
+      console.error("Error signing out:", error);
+    }
   }
 
   toggleMenu() {
@@ -89,6 +107,7 @@ class PauseMenu {
       }, {}),
       cutsceneSpaces: map.cutsceneSpaces,
       walls: map.walls,
+      ledges: map.ledges,
     };
 
     localStorage.setItem("gameData", JSON.stringify(gameData));
@@ -134,14 +153,14 @@ class PauseMenu {
         hero.x = gameObjects.hero.x;
         hero.y = gameObjects.hero.y;
 
-        // Update points and other game data
         overworld.money = gameData.money;
         this.overworld.map.currentEventIndex = gameData.progress;
         this.overworld.map.cutsceneSpaces = gameData.cutsceneSpaces;
         this.overworld.map.walls = gameData.walls;
+        this.overworld.map.ledges = gameData.ledges;
         overworld.hud.innerHTML = `
-                  <p class="Hud">Points: ${overworld.money}</p>
-                `;
+              <p class="Hud">Points: ${overworld.money}</p>
+            `;
         this.overworld.map.overworld = overworld;
         this.overworld.map.mountObjects();
 
@@ -164,12 +183,26 @@ class PauseMenu {
 }
 
 // Initialize PauseMenu when the window loads
-window.addEventListener("load", () => {
-  const overworld = window.overworld;
-  if (overworld) {
-    const pauseMenu = new PauseMenu({ overworld: overworld });
+window.addEventListener("load", async () => {
+  const SUPABASE_URL = "https://ddctemysdgslailkedsw.supabase.co";
+  const SUPABASE_KEY =
+    "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImRkY3RlbXlzZGdzbGFpbGtlZHN3Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3MTY5NjI4NzYsImV4cCI6MjAzMjUzODg3Nn0.eqTP9vbO-JnyF42oZuf4EMUwOXbTT9pgqRb2uH21X_U";
+  const _supabase = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+
+  const {
+    data: { session },
+  } = await _supabase.auth.getSession();
+  if (session) {
+    const userId = session.user.id;
+    const overworld = new Overworld({
+      element: document.querySelector(".game-container"),
+    });
+    overworld.init();
+
+    const pauseMenu = new PauseMenu({ overworld, supabase: _supabase, userId });
     pauseMenu.init();
   } else {
-    console.error("Overworld is not defined on window.");
+    console.error("User is not authenticated.");
+    window.location.href = "index.html";
   }
 });
