@@ -18,7 +18,6 @@ class OverworldMap {
     this.secondCutscenePlayed = false; // Flag to track if the second cutscene has been played
   }
 
-
   drawLowerImage(ctx, cameraPerson) {
     ctx.drawImage(
       this.lowerImage,
@@ -62,7 +61,7 @@ class OverworldMap {
     for (let i = 0; i < events.length; i++) {
       const eventHandler = new OverworldEvent({
         event: events[i],
-        map: this
+        map: this,
       });
       await eventHandler.init();
     }
@@ -125,8 +124,8 @@ class OverworldMap {
 window.OverworldMaps = {
   DemoRoom: {
     mapName: "DemoRoom",
-    lowerSrc: "/images/maps/DemoLower.png",
-    upperSrc: "/images/maps/DemoUpper.png",
+    lowerSrc: "/images/maps/rooms/DemoLower.png",
+    upperSrc: "/images/maps/rooms/DemoUpper.png",
     gameObjects: {
       hero: new Person({
         isPlayerControlled: true,
@@ -227,8 +226,10 @@ window.OverworldMaps = {
   },
   Street: {
     mapName: "Street",
-    lowerSrc: "/images/maps/StreetLower.png",
-    upperSrc: "/images/maps/StreetUpper.png",
+    // lowerSrc: "/images/maps/StreetLower.png",
+    // upperSrc: "/images/maps/StreetUpper.png",
+    lowerSrc: "images/maps/city/city1.png",
+    upperSrc: "images/maps/city/0.png",
     gameObjects: {
       hero: new Person({
         isPlayerControlled: true,
@@ -340,5 +341,4 @@ window.OverworldMaps = {
       ],
     },
   },
-
 };
