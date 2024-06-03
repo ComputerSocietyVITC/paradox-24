@@ -301,6 +301,55 @@ window.OverworldMaps = {
     },
     walls: {
       //outer border 
+      //sign board 
+      [utils.asGridCoord(16, 1)]: true,
+      //mart 
+      [utils.asGridCoord(27, 0)]: true,
+      [utils.asGridCoord(28, 0)]: true,
+      [utils.asGridCoord(29, 0)]: true,
+      [utils.asGridCoord(30, 0)]: true,
+      [utils.asGridCoord(27, 1)]: true,
+      [utils.asGridCoord(27, 2)]: true,
+      [utils.asGridCoord(27, 3)]: true,
+      [utils.asGridCoord(29, 1)]: true,
+      [utils.asGridCoord(29, 2)]: true,
+      [utils.asGridCoord(29, 3)]: true,
+      [utils.asGridCoord(30, 1)]: true,
+      [utils.asGridCoord(30, 2)]: true,
+      [utils.asGridCoord(30, 3)]: true,
+      //poke
+      [utils.asGridCoord(21, 6)]: true,
+      [utils.asGridCoord(22, 6)]: true,
+      [utils.asGridCoord(23, 6)]: true,
+      [utils.asGridCoord(24, 6)]: true,
+
+      [utils.asGridCoord(21, 7)]: true,
+      [utils.asGridCoord(21, 8)]: true,
+      [utils.asGridCoord(21, 9)]: true,
+      [utils.asGridCoord(23, 7)]: true,
+      [utils.asGridCoord(23, 8)]: true,
+      [utils.asGridCoord(23, 9)]: true,
+      [utils.asGridCoord(24, 7)]: true,
+      [utils.asGridCoord(24, 8)]: true,
+      [utils.asGridCoord(24, 9)]: true,
+
+
+
+
+      //top forest 
+      [utils.asGridCoord(7, 0)]: true,
+      [utils.asGridCoord(8, 0)]: true,
+      [utils.asGridCoord(9, 0)]: true,
+      [utils.asGridCoord(10, 0)]: true,
+      [utils.asGridCoord(11, 0)]: true,
+      [utils.asGridCoord(12, 0)]: true,
+      [utils.asGridCoord(13, 0)]: true,
+      [utils.asGridCoord(14, 0)]: true,
+
+      //mid forest
+      [utils.asGridCoord(7, 6)]: true,
+      [utils.asGridCoord(7, 7)]: true,
+      [utils.asGridCoord(8, 7)]: true,
 
 
       // Right border forest 
@@ -382,6 +431,11 @@ window.OverworldMaps = {
       [utils.asGridCoord(29, 17)]: true,
       [utils.asGridCoord(29, 18)]: true,
       [utils.asGridCoord(29, 19)]: true,
+
+      [utils.asGridCoord(26, 16)]: true,
+      [utils.asGridCoord(26, 17)]: true,
+      [utils.asGridCoord(26, 18)]: true,
+      [utils.asGridCoord(26, 19)]: true,
 
 
     },
