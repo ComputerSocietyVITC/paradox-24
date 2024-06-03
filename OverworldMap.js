@@ -300,10 +300,10 @@ window.OverworldMaps = {
       }),
     },
     walls: {
-      //outer border 
-      //sign board 
+      //outer border
+      //sign board
       [utils.asGridCoord(16, 1)]: true,
-      //mart 
+      //mart
       [utils.asGridCoord(27, 0)]: true,
       [utils.asGridCoord(28, 0)]: true,
       [utils.asGridCoord(29, 0)]: true,
@@ -333,10 +333,7 @@ window.OverworldMaps = {
       [utils.asGridCoord(24, 8)]: true,
       [utils.asGridCoord(24, 9)]: true,
 
-
-
-
-      //top forest 
+      //top forest
       [utils.asGridCoord(7, 0)]: true,
       [utils.asGridCoord(8, 0)]: true,
       [utils.asGridCoord(9, 0)]: true,
@@ -351,8 +348,7 @@ window.OverworldMaps = {
       [utils.asGridCoord(7, 7)]: true,
       [utils.asGridCoord(8, 7)]: true,
 
-
-      // Right border forest 
+      // Right border forest
       [utils.asGridCoord(35, 0)]: true,
       [utils.asGridCoord(35, 1)]: true,
       [utils.asGridCoord(35, 2)]: true,
@@ -370,14 +366,14 @@ window.OverworldMaps = {
       [utils.asGridCoord(35, 13)]: true,
       [utils.asGridCoord(35, 14)]: true,
       [utils.asGridCoord(35, 15)]: true,
-      //fence bottom  
+      //fence bottom
       [utils.asGridCoord(34, 15)]: true,
       [utils.asGridCoord(33, 15)]: true,
       [utils.asGridCoord(32, 15)]: true,
       [utils.asGridCoord(31, 15)]: true,
       [utils.asGridCoord(30, 15)]: true,
       [utils.asGridCoord(29, 15)]: true,
-      /////////// 26 and 27 are the path opening 
+      /////////// 26 and 27 are the path opening
       [utils.asGridCoord(26, 15)]: true,
       [utils.asGridCoord(25, 15)]: true,
       [utils.asGridCoord(24, 15)]: true,
@@ -437,14 +433,30 @@ window.OverworldMaps = {
       [utils.asGridCoord(26, 18)]: true,
       [utils.asGridCoord(26, 19)]: true,
 
+      //water
+      [utils.asGridCoord(9, 8)]: true,
+      [utils.asGridCoord(10, 8)]: true,
+      [utils.asGridCoord(11, 8)]: true,
+      [utils.asGridCoord(12, 8)]: true,
+      [utils.asGridCoord(12, 9)]: true,
+      [utils.asGridCoord(12, 10)]: true,
+      [utils.asGridCoord(12, 11)]: true,
+      [utils.asGridCoord(7, 11)]: true,
+      [utils.asGridCoord(8, 11)]: true,
+      [utils.asGridCoord(9, 11)]: true,
+      [utils.asGridCoord(10, 11)]: true,
+      [utils.asGridCoord(11, 11)]: true,
+      [utils.asGridCoord(12, 11)]: true,
 
+      // map boundaries
+      [utils.asGridCoord(0, 0)]: true,
     },
     ledges: {
-      [utils.asGridCoord(3, 11)]: true,
-      [utils.asGridCoord(4, 11)]: true,
-      [utils.asGridCoord(5, 11)]: true,
-      [utils.asGridCoord(6, 11)]: true,
-      [utils.asGridCoord(7, 11)]: true,
+      [utils.asGridCoord(4, 12)]: true,
+      [utils.asGridCoord(5, 12)]: true,
+      [utils.asGridCoord(6, 12)]: true,
+      [utils.asGridCoord(7, 12)]: true,
+      [utils.asGridCoord(7, 12)]: true,
       [utils.asGridCoord(7, 10)]: true,
       [utils.asGridCoord(7, 9)]: true,
       [utils.asGridCoord(7, 8)]: true,
