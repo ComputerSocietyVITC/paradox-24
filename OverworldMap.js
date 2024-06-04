@@ -230,13 +230,13 @@ window.OverworldMaps = {
       ],
       [utils.asGridCoord(5, 10)]: [
         {
-          events: [{ type: "changeMap", map: "Street" }],
+          events: [{ type: "changeMap", map: "City1" }],
         },
       ],
     },
   },
-  Street: {
-    mapName: "Street",
+  City1: {
+    mapName: "City1",
     lowerSrc: "images/maps/city/city1.png",
     upperSrc: "images/maps/city/0.png",
     gameObjects: {
@@ -502,6 +502,312 @@ window.OverworldMaps = {
           ],
         },
       ],
+      [utils.asGridCoord(28, 20)]: [
+        {
+          events: [
+            { type: "changeMap", map: "Route1" },
+            { type: "textMessage", text: "You have taken the route 1" },
+          ],
+        },
+      ],
+      [utils.asGridCoord(29, 20)]: [
+        {
+          events: [
+            { type: "changeMap", map: "Route1" },
+            { type: "textMessage", text: "You have taken the route 1" },
+          ],
+        },
+      ],
     },
   },
+  Route1: {
+    mapName: "Route1",
+    lowerSrc: "images/maps/routes/route1.png",
+    upperSrc: "images/maps/city/0.png",
+    gameObjects: {
+
+
+      hero: new Person({
+        isPlayerControlled: true,
+        x: utils.withGrid(8),
+        y: utils.withGrid(0),
+        direction: "down",
+      }),
+    },
+    walls: {
+      //left 
+      [utils.asGridCoord(1, 0)]: true,
+      [utils.asGridCoord(1, 1)]: true,
+      [utils.asGridCoord(1, 2)]: true,
+      [utils.asGridCoord(1, 3)]: true,
+      [utils.asGridCoord(1, 4)]: true,
+      [utils.asGridCoord(1, 5)]: true,
+      [utils.asGridCoord(1, 6)]: true,
+      [utils.asGridCoord(1, 7)]: true,
+      [utils.asGridCoord(1, 8)]: true,
+      [utils.asGridCoord(1, 9)]: true,
+      [utils.asGridCoord(1, 10)]: true,
+      [utils.asGridCoord(1, 11)]: true,
+      [utils.asGridCoord(1, 12)]: true,
+      [utils.asGridCoord(1, 13)]: true,
+      [utils.asGridCoord(1, 14)]: true,
+      [utils.asGridCoord(1, 15)]: true,
+      [utils.asGridCoord(1, 16)]: true,
+      [utils.asGridCoord(1, 17)]: true,
+      [utils.asGridCoord(1, 18)]: true,
+      [utils.asGridCoord(1, 19)]: true,
+      [utils.asGridCoord(1, 20)]: true,
+      [utils.asGridCoord(1, 21)]: true,
+      [utils.asGridCoord(1, 22)]: true,
+      [utils.asGridCoord(1, 23)]: true,
+      [utils.asGridCoord(1, 24)]: true,
+      [utils.asGridCoord(1, 25)]: true,
+      [utils.asGridCoord(1, 26)]: true,
+      [utils.asGridCoord(1, 27)]: true,
+      [utils.asGridCoord(1, 28)]: true,
+      [utils.asGridCoord(1, 29)]: true,
+      [utils.asGridCoord(1, 30)]: true,
+      [utils.asGridCoord(1, 31)]: true,
+      [utils.asGridCoord(1, 32)]: true,
+      [utils.asGridCoord(1, 33)]: true,
+      [utils.asGridCoord(1, 34)]: true,
+      [utils.asGridCoord(1, 35)]: true,
+
+      //right
+      [utils.asGridCoord(16, 0)]: true,
+      [utils.asGridCoord(16, 1)]: true,
+      [utils.asGridCoord(16, 2)]: true,
+      [utils.asGridCoord(16, 3)]: true,
+      [utils.asGridCoord(16, 4)]: true,
+      [utils.asGridCoord(16, 5)]: true,
+      [utils.asGridCoord(16, 6)]: true,
+      [utils.asGridCoord(16, 7)]: true,
+      [utils.asGridCoord(16, 8)]: true,
+      [utils.asGridCoord(16, 9)]: true,
+      [utils.asGridCoord(16, 10)]: true,
+      [utils.asGridCoord(16, 11)]: true,
+      [utils.asGridCoord(16, 12)]: true,
+      [utils.asGridCoord(16, 13)]: true,
+      [utils.asGridCoord(16, 14)]: true,
+      [utils.asGridCoord(16, 15)]: true,
+      [utils.asGridCoord(16, 16)]: true,
+      [utils.asGridCoord(16, 17)]: true,
+      [utils.asGridCoord(16, 18)]: true,
+      [utils.asGridCoord(16, 19)]: true,
+      [utils.asGridCoord(16, 20)]: true,
+      [utils.asGridCoord(16, 21)]: true,
+      [utils.asGridCoord(16, 22)]: true,
+      [utils.asGridCoord(16, 23)]: true,
+      [utils.asGridCoord(16, 24)]: true,
+      [utils.asGridCoord(16, 25)]: true,
+      [utils.asGridCoord(16, 26)]: true,
+      [utils.asGridCoord(16, 27)]: true,
+      [utils.asGridCoord(16, 28)]: true,
+      [utils.asGridCoord(16, 29)]: true,
+      [utils.asGridCoord(16, 30)]: true,
+      [utils.asGridCoord(16, 31)]: true,
+      [utils.asGridCoord(16, 32)]: true,
+      [utils.asGridCoord(16, 33)]: true,
+      [utils.asGridCoord(16, 34)]: true,
+      [utils.asGridCoord(16, 35)]: true,
+
+      //mid forest and mid stones 
+
+      [utils.asGridCoord(7, 4)]: true,
+      [utils.asGridCoord(7, 5)]: true,
+      [utils.asGridCoord(7, 6)]: true,
+      [utils.asGridCoord(7, 7)]: true,
+      [utils.asGridCoord(7, 8)]: true,
+      [utils.asGridCoord(7, 9)]: true,
+
+      [utils.asGridCoord(2, 23)]: true,
+      [utils.asGridCoord(3, 23)]: true,
+      [utils.asGridCoord(4, 23)]: true,
+      [utils.asGridCoord(5, 23)]: true,
+      [utils.asGridCoord(6, 23)]: true,
+      [utils.asGridCoord(7, 23)]: true,
+      [utils.asGridCoord(8, 23)]: true,
+      [utils.asGridCoord(9, 23)]: true,
+
+      [utils.asGridCoord(2, 13)]: true,
+      [utils.asGridCoord(3, 13)]: true,
+      [utils.asGridCoord(8, 13)]: true,
+      [utils.asGridCoord(9, 13)]: true,
+      [utils.asGridCoord(10, 13)]: true,
+      [utils.asGridCoord(11, 13)]: true,
+
+      //stones 
+
+      ///////////top
+      [utils.asGridCoord(7, 0)]: true,
+      [utils.asGridCoord(10, 0)]: true,
+
+      [utils.asGridCoord(2, 1)]: true,
+      [utils.asGridCoord(3, 1)]: true,
+      [utils.asGridCoord(4, 1)]: true,
+      [utils.asGridCoord(5, 1)]: true,
+      [utils.asGridCoord(6, 1)]: true,
+      [utils.asGridCoord(7, 1)]: true,
+
+      [utils.asGridCoord(10, 1)]: true,
+      [utils.asGridCoord(11, 1)]: true,
+      [utils.asGridCoord(12, 1)]: true,
+      [utils.asGridCoord(13, 1)]: true,
+      [utils.asGridCoord(14, 1)]: true,
+      [utils.asGridCoord(15, 1)]: true,
+
+      //////////bottom 
+      [utils.asGridCoord(2, 32)]: true,
+      [utils.asGridCoord(3, 32)]: true,
+      [utils.asGridCoord(4, 32)]: true,
+      [utils.asGridCoord(5, 32)]: true,
+      [utils.asGridCoord(6, 32)]: true,
+      [utils.asGridCoord(7, 32)]: true,
+
+      [utils.asGridCoord(10, 32)]: true,
+      [utils.asGridCoord(11, 32)]: true,
+      [utils.asGridCoord(12, 32)]: true,
+      [utils.asGridCoord(13, 32)]: true,
+      [utils.asGridCoord(14, 32)]: true,
+      [utils.asGridCoord(15, 32)]: true,
+
+      [utils.asGridCoord(7, 33)]: true,
+      [utils.asGridCoord(7, 34)]: true,
+      [utils.asGridCoord(7, 35)]: true,
+      [utils.asGridCoord(10, 33)]: true,
+      [utils.asGridCoord(10, 34)]: true,
+      [utils.asGridCoord(10, 35)]: true,
+      //board 
+      [utils.asGridCoord(7, 27)]: true,
+
+
+    },
+    ledges: {
+      [utils.asGridCoord(2, 6)]: true,
+      [utils.asGridCoord(3, 6)]: true,
+      [utils.asGridCoord(4, 6)]: true,
+      [utils.asGridCoord(5, 6)]: true,
+      [utils.asGridCoord(6, 6)]: true,
+
+      [utils.asGridCoord(8, 6)]: true,
+      [utils.asGridCoord(9, 6)]: true,
+      [utils.asGridCoord(10, 6)]: true,
+      [utils.asGridCoord(11, 6)]: true,
+
+      [utils.asGridCoord(2, 10)]: true,
+      [utils.asGridCoord(3, 10)]: true,
+      [utils.asGridCoord(4, 10)]: true,
+      [utils.asGridCoord(5, 10)]: true,
+      [utils.asGridCoord(6, 10)]: true,
+
+      [utils.asGridCoord(4, 14)]: true,
+      [utils.asGridCoord(5, 14)]: true,
+      [utils.asGridCoord(6, 14)]: true,
+      [utils.asGridCoord(7, 14)]: true,
+
+      [utils.asGridCoord(2, 20)]: true,
+
+      [utils.asGridCoord(4, 20)]: true,
+      [utils.asGridCoord(5, 20)]: true,
+      [utils.asGridCoord(6, 20)]: true,
+
+      [utils.asGridCoord(8, 20)]: true,
+      [utils.asGridCoord(9, 20)]: true,
+      [utils.asGridCoord(10, 20)]: true,
+      [utils.asGridCoord(11, 20)]: true,
+      [utils.asGridCoord(12, 20)]: true,
+      [utils.asGridCoord(13, 20)]: true,
+      [utils.asGridCoord(14, 20)]: true,
+      [utils.asGridCoord(15, 20)]: true,
+
+      [utils.asGridCoord(14, 24)]: true,
+      [utils.asGridCoord(15, 24)]: true,
+
+      [utils.asGridCoord(2, 28)]: true,
+      [utils.asGridCoord(3, 28)]: true,
+
+      [utils.asGridCoord(8, 28)]: true,
+      [utils.asGridCoord(9, 28)]: true,
+      [utils.asGridCoord(10, 28)]: true,
+      [utils.asGridCoord(11, 28)]: true,
+      [utils.asGridCoord(12, 28)]: true,
+      [utils.asGridCoord(13, 28)]: true,
+      [utils.asGridCoord(14, 28)]: true,
+      [utils.asGridCoord(15, 28)]: true,
+
+    },
+    cutsceneSpaces: {
+      [utils.asGridCoord(8, 0)]: [
+        {
+          events: [
+            { type: "changeMap", map: "City1" },
+            { type: "textMessage", text: "You are back in city 1" },
+          ]
+        }
+      ],
+      [utils.asGridCoord(9, 0)]: [
+
+        {
+          events: [
+            { type: "changeMap", map: "City1" },
+            { type: "textMessage", text: "You are back in city 1" },
+          ]
+        }
+      ],
+      [utils.asGridCoord(8, 35)]: [
+        {
+          events: [
+            { type: "changeMap", map: "City2" },
+            { type: "textMessage", text: "You have arrived in city 2 " },
+          ]
+        }
+      ],
+      [utils.asGridCoord(9, 35)]: [
+
+        {
+          events: [
+            { type: "changeMap", map: "City2" },
+            { type: "textMessage", text: "You have arrived in city 2" },
+          ]
+        }
+      ],
+    }
+
+  },
+  City2: {
+    mapName: "City2",
+    lowerSrc: "images/maps/city/city2.png",
+    upperSrc: "images/maps/city/0.png",
+    gameObjects: {
+
+
+      hero: new Person({
+        isPlayerControlled: true,
+        x: utils.withGrid(1),
+        y: utils.withGrid(9),
+        direction: "down",
+      }),
+    },
+    cutsceneSpaces: {
+
+      [utils.asGridCoord(1, 9)]: [
+        {
+          events: [
+            { type: "changeMap", map: "Route1" },
+            { type: "textMessage", text: "You have taken route 1" },
+          ]
+        }
+      ],
+      [utils.asGridCoord(1, 10)]: [
+
+        {
+          events: [
+            { type: "changeMap", map: "Route1" },
+            { type: "textMessage", text: "You have taken route 1" },
+          ]
+        }
+      ],
+    }
+
+  }
 };
