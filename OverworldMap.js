@@ -1110,6 +1110,9 @@ window.OverworldMaps = {
       [utils.asGridCoord(23, 6)]: true,
 
 
+      [utils.asGridCoord(36, 25)]: true,
+      [utils.asGridCoord(40, 27)]: true,
+
       //boards
       [utils.asGridCoord(25, 9)]: true,
       [utils.asGridCoord(3, 27)]: true,
@@ -1139,7 +1142,6 @@ window.OverworldMaps = {
         }
       ],
       [utils.asGridCoord(1, 10)]: [
-
         {
           events: [
             { type: "changeMap", map: "Route1" },
