@@ -3,6 +3,8 @@ class PauseMenu {
     this.overworld = config.overworld;
     this.isOpen = false;
     this.element = null;
+    this.supabase = config.supabase;
+    this.userId = config.userId;
   }
 
   createMenu() {
@@ -15,6 +17,7 @@ class PauseMenu {
           <button class="save-button">Save Game</button>
           <button class="load-button">Load Game</button>
           <button class="resume-button">Resume</button>
+          <button class="sign-out-button">Sign Out</button>
         </div>
       `;
 
