@@ -231,7 +231,7 @@ window.addEventListener("load", async () => {
 
     const pauseMenu = new PauseMenu({ overworld, supabase: _supabase, userId });
     pauseMenu.init();
-
+    window.pauseMenu = pauseMenu;
     const hasSavedGame = await pauseMenu.checkForSavedGame();
     // if (hasSavedGame) {
     //   await pauseMenu.loadGame(true);

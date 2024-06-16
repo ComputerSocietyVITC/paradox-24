@@ -81,6 +81,7 @@ class OverworldEvent {
 
         if (isCorrect) {
           this.map.overworld.setMoney(this);
+          window.pauseMenu.saveGame();
         }
 
         const feedbackMessage = new TextMessage({
