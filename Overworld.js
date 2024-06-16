@@ -139,6 +139,7 @@ class Overworld {
       },
     ]);
 
+
     // Make overworld globally accessible
     window.overworld = this;
   }

@@ -5,7 +5,22 @@ class PauseMenu {
     this.element = null;
     this.supabase = config.supabase;
     this.userId = config.userId;
-    this.load = 0;
+  }
+  async checkForSavedGame() {
+    try {
+      const { data, error } = await this.supabase
+        .from('game_saves')
+        .select('game_data')
+        .eq('user_id', this.userId)
+        .single();
+      if (error) {
+        throw error;
+      }
+      return data.game_data ? true : false;
+    } catch (error) {
+      console.error("Error checking for saved game:", error);
+      return false;
+    }
   }
 
   createMenu() {
@@ -126,8 +141,7 @@ class PauseMenu {
   }
 
 
-  async loadGame() {
-
+  async loadGame(initialLoad = false) {
     try {
       const { data, error } = await this.supabase
         .from('game_saves')
@@ -164,32 +178,31 @@ class PauseMenu {
           this.overworld.map.walls = gameData.walls;
           this.overworld.map.ledges = gameData.ledges;
           overworld.hud.innerHTML = `
-        <p class="Hud">Points: ${overworld.money}</p>
-      `;
+            <p class="Hud">Points: ${overworld.money}</p>
+          `;
           this.overworld.map.overworld = overworld;
           this.overworld.map.mountObjects();
-          if (this.load === 1) {
+          if (!initialLoad) {
             alert("Game loaded successfully!");
-          } else {
-            return 1;
           }
         } else {
           console.error("Map configuration not found for map name:", mapName);
         }
       } else {
-        if (this.load === 1) alert("No saved game data found.");
+        if (!initialLoad) {
+          alert("No saved game data found.");
+        }
       }
     } catch (error) {
       console.error("Error loading game:", error);
-      alert("Failed to load game.");
+      if (!initialLoad) {
+        alert("Failed to load game.");
+      }
     }
-    this.load = 1;
-
   }
 
 
   init() {
-
     document.addEventListener("keydown", (event) => {
       if (event.key === "Escape") {
         this.toggleMenu();
@@ -210,17 +223,22 @@ window.addEventListener("load", async () => {
   } = await _supabase.auth.getSession();
   if (session) {
     const userId = session.user.id;
-
     const overworld = new Overworld({
       element: document.querySelector(".game-container"),
     });
-    overworld.init();
-    const pauseMenu = new PauseMenu({ overworld, supabase: _supabase, userId });
-    pauseMenu.loadGame()
 
+    await overworld.init();
+
+    const pauseMenu = new PauseMenu({ overworld, supabase: _supabase, userId });
     pauseMenu.init();
+
+    const hasSavedGame = await pauseMenu.checkForSavedGame();
+    // if (hasSavedGame) {
+    //   await pauseMenu.loadGame(true);
+    // }
   } else {
     console.error("User is not authenticated.");
     window.location.href = "index.html";
   }
 });
+
