@@ -41,7 +41,7 @@ class PauseMenu {
 
     const saveButton = this.element.querySelector(".save-button");
     saveButton.addEventListener("click", () => {
-      this.saveGame();
+      this.saveGame(false);
     });
 
     const loadButton = this.element.querySelector(".load-button");
@@ -100,7 +100,7 @@ class PauseMenu {
     this.isOpen = false;
   }
 
-  async saveGame() {
+  async saveGame(flag) {
     if (!this.overworld) {
       console.error("Overworld is not defined.");
       return;
@@ -133,7 +133,7 @@ class PauseMenu {
       if (error) {
         throw error;
       }
-      alert("Game saved successfully!");
+      if (!flag) alert("Game saved successfully!");
     } catch (error) {
       console.error("Error saving game:", error);
       alert("Failed to save game.");

@@ -93,6 +93,7 @@ class Overworld {
       this.element.innerHTML = (`
         <p class="Hud">Points: ${this.map.overworld.money}</p> 
     `)
+      window.pauseMenu.saveGame(true);
     }
     console.log(this.money);
   }
