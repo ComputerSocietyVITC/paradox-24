@@ -75,14 +75,11 @@ class Overworld {
     });
   }
 
-  startMap(load, mapConfig) {
-    if (load !== 1) {
-
-      this.map = new OverworldMap(mapConfig);
-      this.map.overworld = this;
-      this.cameraPerson = this.map.gameObjects.hero;
-      this.map.mountObjects();
-    }
+  startMap(mapConfig) {
+    this.map = new OverworldMap(mapConfig);
+    this.map.overworld = this;
+    this.cameraPerson = this.map.gameObjects.hero;
+    this.map.mountObjects();
   }
 
   setMoney(object) {
@@ -117,36 +114,30 @@ class Overworld {
     this.hud = document.querySelector(".Hud");
   }
 
-  init(pauseMenu) {
+  init() {
+    this.startMap(window.OverworldMaps.DemoRoom);
+    this.bindActionInput();
+    this.bindHeroPositionCheck();
 
-    let load = pauseMenu.loadGame()
+    this.directionInput = new DirectionInput();
+    this.directionInput.init();
 
-    this.startMap(load, window.OverworldMaps.DemoRoom);
-    if (load !== 1) {
+    this.initMoney(document.querySelector(".game-container"));
 
-      this.bindActionInput();
-      this.bindHeroPositionCheck();
-      this.directionInput = new DirectionInput();
-      this.directionInput.init();
-
-      this.initMoney(document.querySelector(".game-container"));
-
-      this.startGameLoop();
-      this.map.startCutscene([
-        { who: "hero", type: "walk", direction: "down" },
-        { who: "hero", type: "walk", direction: "down" },
-        { who: "hero", type: "stand", direction: "right" },
-        { who: "npcA", type: "walk", direction: "left" },
-        { who: "npcA", type: "walk", direction: "up" },
-        { who: "npcA", type: "stand", direction: "left" },
-        { type: "textMessage", text: "Hello, Player! Welcome to Paradox..." },
-        {
-          type: "textMessage",
-          text: "I am Harshit, I will explain you the mechanics and rules for the game...",
-        },
-      ]);
-    }
-
+    this.startGameLoop();
+    this.map.startCutscene([
+      { who: "hero", type: "walk", direction: "down" },
+      { who: "hero", type: "walk", direction: "down" },
+      { who: "hero", type: "stand", direction: "right" },
+      { who: "npcA", type: "walk", direction: "left" },
+      { who: "npcA", type: "walk", direction: "up" },
+      { who: "npcA", type: "stand", direction: "left" },
+      { type: "textMessage", text: "Hello, Player! Welcome to Paradox..." },
+      {
+        type: "textMessage",
+        text: "I am Harshit, I will explain you the mechanics and rules for the game...",
+      },
+    ]);
 
     // Make overworld globally accessible
     window.overworld = this;

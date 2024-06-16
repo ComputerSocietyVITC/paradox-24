@@ -214,9 +214,9 @@ window.addEventListener("load", async () => {
     const overworld = new Overworld({
       element: document.querySelector(".game-container"),
     });
+    overworld.init();
     const pauseMenu = new PauseMenu({ overworld, supabase: _supabase, userId });
-
-    overworld.init(pauseMenu);
+    pauseMenu.loadGame()
 
     pauseMenu.init();
   } else {
