@@ -81,6 +81,7 @@ class OverworldEvent {
 
         if (isCorrect) {
           this.map.overworld.setMoney(this);
+
         }
 
         const feedbackMessage = new TextMessage({
@@ -94,13 +95,21 @@ class OverworldEvent {
   }
 
   changeMap(resolve) {
+    this.map.removeWall(this.map.gameObjects.hero.x, this.map.gameObjects.hero.y);
+
+    window.OverworldMaps[this.event.map].gameObjects.hero.x = utils.withGrid(this.event.heroX);
+    window.OverworldMaps[this.event.map].gameObjects.hero.y = utils.withGrid(this.event.heroY);
+    window.OverworldMaps[this.event.map].gameObjects.hero.direction = this.event.direction;
+
     const sceneTransition = new SceneTransition();
+
     sceneTransition.init(document.querySelector(".game-container"), () => {
-      this.map.overworld.startMap(window.OverworldMaps[this.event.map]);
+      this.map.overworld.startMap(window.OverworldMaps[this.event.map],);
       resolve();
 
       sceneTransition.fadeOut();
     });
+
   }
 
   init() {

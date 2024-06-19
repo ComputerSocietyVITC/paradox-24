@@ -121,6 +121,7 @@ class OverworldMap {
 
   addWall(x, y) {
     this.walls[`${x},${y}`] = true;
+    console.log(x, y);
   }
   removeWall(x, y) {
     delete this.walls[`${x},${y}`];
@@ -230,7 +231,9 @@ window.OverworldMaps = {
       ],
       [utils.asGridCoord(5, 10)]: [
         {
-          events: [{ type: "changeMap", map: "City1" }],
+          events: [
+            { type: "changeMap", map: "City1", heroX: 23, heroY: 11, direction: "down" },
+          ],
         },
       ],
     },
@@ -497,7 +500,7 @@ window.OverworldMaps = {
       [utils.asGridCoord(23, 10)]: [
         {
           events: [
-            { type: "changeMap", map: "DemoRoom" },
+            { type: "changeMap", map: "DemoRoom", heroX: 5, heroY: 10, direction: "up" },
             { type: "textMessage", text: "Welcome back to the demo room!" },
           ],
         },
@@ -505,7 +508,7 @@ window.OverworldMaps = {
       [utils.asGridCoord(28, 20)]: [
         {
           events: [
-            { type: "changeMap", map: "Route1" },
+            { type: "changeMap", map: "Route1", heroX: 8, heroY: 0, direction: "down" },
             { type: "textMessage", text: "You have taken the route 1" },
           ],
         },
@@ -513,7 +516,7 @@ window.OverworldMaps = {
       [utils.asGridCoord(29, 20)]: [
         {
           events: [
-            { type: "changeMap", map: "Route1" },
+            { type: "changeMap", map: "Route1", heroX: 9, heroY: 0, direction: "down" },
             { type: "textMessage", text: "You have taken the route 1" },
           ],
         },
@@ -882,7 +885,7 @@ window.OverworldMaps = {
       [utils.asGridCoord(1, 9)]: [
         {
           events: [
-            { type: "changeMap", map: "Route1" },
+            { type: "changeMap", map: "Route1", heroX: 8, heroY: 35, direction: "up" },
             { type: "textMessage", text: "You have taken route 1" },
           ]
         }
@@ -890,7 +893,7 @@ window.OverworldMaps = {
       [utils.asGridCoord(1, 10)]: [
         {
           events: [
-            { type: "changeMap", map: "Route1" },
+            { type: "changeMap", map: "Route1", heroX: 9, heroY: 35, direction: "up" },
             { type: "textMessage", text: "You have taken route 1" },
           ]
         }
@@ -898,7 +901,7 @@ window.OverworldMaps = {
       [utils.asGridCoord(15, 36)]: [
         {
           events: [
-            { type: "changeMap", map: "City3" },
+            { type: "changeMap", map: "City3", heroX: 1, heroY: 3, direction: "right" },
             { type: "textMessage", text: "You have arrived in City 3" },
           ]
         }
@@ -906,7 +909,7 @@ window.OverworldMaps = {
       [utils.asGridCoord(16, 36)]: [
         {
           events: [
-            { type: "changeMap", map: "City3" },
+            { type: "changeMap", map: "City3", heroX: 1, heroY: 3, direction: "right" },
             { type: "textMessage", text: "You have arrived in City 3" },
           ]
         }
@@ -914,7 +917,7 @@ window.OverworldMaps = {
       [utils.asGridCoord(40, 25)]: [
         {
           events: [
-            { type: "changeMap", map: "Route2" },
+            { type: "changeMap", map: "Route2", heroX: 0, heroY: 4, direction: "right" },
             { type: "textMessage", text: "You have taken route 2" },
           ]
         }
@@ -922,7 +925,7 @@ window.OverworldMaps = {
       [utils.asGridCoord(40, 26)]: [
         {
           events: [
-            { type: "changeMap", map: "Route2" },
+            { type: "changeMap", map: "Route2", heroX: 0, heroY: 5, direction: "right" },
             { type: "textMessage", text: "You have taken route 2" },
           ]
         }
@@ -1438,7 +1441,7 @@ window.OverworldMaps = {
       [utils.asGridCoord(1, 3)]: [
         {
           events: [
-            { type: "changeMap", map: "City2" },
+            { type: "changeMap", map: "City2", heroX: 15, heroY: 36, direction: "up" },
             { type: "textMessage", text: "You are back in City 2" },
           ]
         }
@@ -1446,7 +1449,7 @@ window.OverworldMaps = {
       [utils.asGridCoord(1, 25)]: [
         {
           events: [
-            { type: "changeMap", map: "Route6" },
+            { type: "changeMap", map: "Route6", heroX: 14, heroY: 17, direction: "up" },
             { type: "textMessage", text: "You have taken Route 6" },
           ]
         }
@@ -1454,7 +1457,7 @@ window.OverworldMaps = {
       [utils.asGridCoord(1, 26)]: [
         {
           events: [
-            { type: "changeMap", map: "Route6" },
+            { type: "changeMap", map: "Route6", heroX: 13, heroY: 17, direction: "up" },
             { type: "textMessage", text: "You have taken Route 6" },
           ]
         }
@@ -1936,7 +1939,7 @@ window.OverworldMaps = {
       [utils.asGridCoord(40, 17)]: [
         {
           events: [
-            { type: "changeMap", map: "Route2" },
+            { type: "changeMap", map: "Route2", heroX: 6, heroY: 17, direction: "up" },
             { type: "textMessage", text: "You have taken route 2" },
           ]
         }
@@ -1944,7 +1947,7 @@ window.OverworldMaps = {
       [utils.asGridCoord(40, 18)]: [
         {
           events: [
-            { type: "changeMap", map: "Route2" },
+            { type: "changeMap", map: "Route2", heroX: 6, heroY: 17, direction: "up" },
             { type: "textMessage", text: "You have taken route 2" },
           ]
         }
@@ -1952,7 +1955,7 @@ window.OverworldMaps = {
       [utils.asGridCoord(40, 19)]: [
         {
           events: [
-            { type: "changeMap", map: "Route2" },
+            { type: "changeMap", map: "Route2", heroX: 7, heroY: 17, direction: "up" },
             { type: "textMessage", text: "You have taken route 2" },
           ]
         }
@@ -1960,7 +1963,7 @@ window.OverworldMaps = {
       [utils.asGridCoord(40, 20)]: [
         {
           events: [
-            { type: "changeMap", map: "Route2" },
+            { type: "changeMap", map: "Route2", heroX: 6, heroY: 17, direction: "up" },
             { type: "textMessage", text: "You have taken route 2" },
           ]
         }
@@ -1968,7 +1971,7 @@ window.OverworldMaps = {
       [utils.asGridCoord(19, 36)]: [
         {
           events: [
-            { type: "changeMap", map: "Route6" },
+            { type: "changeMap", map: "Route6", heroX: 6, heroY: 17, direction: "up" },
             { type: "textMessage", text: "You have taken route 6" },
           ]
         }
@@ -1976,7 +1979,7 @@ window.OverworldMaps = {
       [utils.asGridCoord(20, 36)]: [
         {
           events: [
-            { type: "changeMap", map: "Route6" },
+            { type: "changeMap", map: "Route6", heroX: 7, heroY: 17, direction: "up" },
             { type: "textMessage", text: "You have taken route 6" },
           ]
         }
@@ -2225,7 +2228,7 @@ window.OverworldMaps = {
       [utils.asGridCoord(8, 0)]: [
         {
           events: [
-            { type: "changeMap", map: "City1" },
+            { type: "changeMap", map: "City1", heroX: 28, heroY: 20, direction: "up" },
             { type: "textMessage", text: "You are back in city 1" },
           ]
         }
@@ -2234,7 +2237,7 @@ window.OverworldMaps = {
 
         {
           events: [
-            { type: "changeMap", map: "City1" },
+            { type: "changeMap", map: "City1", heroX: 29, heroY: 20, direction: "up" },
             { type: "textMessage", text: "You are back in city 1" },
           ]
         }
@@ -2242,7 +2245,7 @@ window.OverworldMaps = {
       [utils.asGridCoord(8, 35)]: [
         {
           events: [
-            { type: "changeMap", map: "City2" },
+            { type: "changeMap", map: "City2", heroX: 1, heroY: 9, direction: "right" },
             { type: "textMessage", text: "You have arrived in city 2 " },
           ]
         }
@@ -2251,7 +2254,7 @@ window.OverworldMaps = {
 
         {
           events: [
-            { type: "changeMap", map: "City2" },
+            { type: "changeMap", map: "City2", heroX: 1, heroY: 10, direction: "right" },
             { type: "textMessage", text: "You have arrived in city 2" },
           ]
         }
@@ -2382,7 +2385,7 @@ window.OverworldMaps = {
       [utils.asGridCoord(0, 4)]: [
         {
           events: [
-            { type: "changeMap", map: "City2" },
+            { type: "changeMap", map: "City2", heroX: 40, heroY: 25, direction: "left" },
             { type: "textMessage", text: "You are back in city 2" },
           ]
         }
@@ -2390,23 +2393,23 @@ window.OverworldMaps = {
       [utils.asGridCoord(0, 5)]: [
         {
           events: [
-            { type: "changeMap", map: "City2" },
+            { type: "changeMap", map: "City2", heroX: 40, heroY: 26, direction: "left" },
             { type: "textMessage", text: "You are back in city 2" },
-          ]
-        }
-      ],
-      [utils.asGridCoord(7, 17)]: [
-        {
-          events: [
-            { type: "changeMap", map: "City4" },
-            { type: "textMessage", text: "You have arrived in city 4" },
           ]
         }
       ],
       [utils.asGridCoord(6, 17)]: [
         {
           events: [
-            { type: "changeMap", map: "City4" },
+            { type: "changeMap", map: "City4", heroX: 40, heroY: 18, direction: "left" },
+            { type: "textMessage", text: "You have arrived in city 4" },
+          ]
+        }
+      ],
+      [utils.asGridCoord(7, 17)]: [
+        {
+          events: [
+            { type: "changeMap", map: "City4", heroX: 40, heroY: 19, direction: "left" },
             { type: "textMessage", text: "You have arrived in city 4" },
           ]
         }
@@ -2493,20 +2496,6 @@ window.OverworldMaps = {
     },
     walls: {
       //map boundary
-      [utils.asGridCoord(7, 0)]: true,
-      [utils.asGridCoord(8, 0)]: true,
-      [utils.asGridCoord(9, 0)]: true,
-      [utils.asGridCoord(10, 0)]: true,
-      [utils.asGridCoord(11, 0)]: true,
-      [utils.asGridCoord(12, 0)]: true,
-      [utils.asGridCoord(13, 0)]: true,
-      [utils.asGridCoord(5, 17)]: true,
-      [utils.asGridCoord(8, 17)]: true,
-      [utils.asGridCoord(9, 17)]: true,
-      [utils.asGridCoord(10, 17)]: true,
-      [utils.asGridCoord(11, 17)]: true,
-      [utils.asGridCoord(12, 17)]: true,
-      [utils.asGridCoord(13, 17)]: true,
 
       //misc
       [utils.asGridCoord(5, 3)]: true,
@@ -2646,7 +2635,7 @@ window.OverworldMaps = {
       [utils.asGridCoord(15, 17)]: [
         {
           events: [
-            { type: "changeMap", map: "City3" },
+            { type: "changeMap", map: "City3", heroX: 1, heroY: 25, direction: "right" },
             { type: "textMessage", text: "You are back in City 3" },
           ]
         }
@@ -2654,7 +2643,7 @@ window.OverworldMaps = {
       [utils.asGridCoord(14, 17)]: [
         {
           events: [
-            { type: "changeMap", map: "City3" },
+            { type: "changeMap", map: "City3", heroX: 1, heroY: 26, direction: "right" },
             { type: "textMessage", text: "You are back in City 3" },
           ]
         }
@@ -2662,7 +2651,7 @@ window.OverworldMaps = {
       [utils.asGridCoord(6, 17)]: [
         {
           events: [
-            { type: "changeMap", map: "City4" },
+            { type: "changeMap", map: "City4", heroX: 19, heroY: 36, direction: "up" },
             { type: "textMessage", text: "You are back in City 4" },
           ]
         }
@@ -2670,7 +2659,7 @@ window.OverworldMaps = {
       [utils.asGridCoord(7, 17)]: [
         {
           events: [
-            { type: "changeMap", map: "City4" },
+            { type: "changeMap", map: "City4", heroX: 20, heroY: 36, direction: "up" },
             { type: "textMessage", text: "You are back in City 4" },
           ]
         }
