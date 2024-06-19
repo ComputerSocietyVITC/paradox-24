@@ -95,6 +95,7 @@ class OverworldEvent {
   }
 
   changeMap(resolve) {
+    // NOTE : WHO IS SAVING THE HERO'S LAST POSITION ????? PLS FIX THIS NONSENSE !!!
     this.map.removeWall(this.map.gameObjects.hero.x, this.map.gameObjects.hero.y);
 
     window.OverworldMaps[this.event.map].gameObjects.hero.x = utils.withGrid(this.event.heroX);
