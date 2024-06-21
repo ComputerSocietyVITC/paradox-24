@@ -7,6 +7,7 @@ class Overworld {
     this.map = null;
     this.money = 0;         //money
     this.isPaused = false; // Track if the game is paused
+    this.badges = [];
   }
 
   startGameLoop() {
@@ -82,22 +83,41 @@ class Overworld {
     this.map.mountObjects();
   }
 
-  setMoney(object) {
+  async setMoney(object) {
+    //NOTE : y this.map.overworld.money
+    if (object.event.qsnValue.points > 0) {
+      console.log('Initial points:', this.map.overworld.money);
 
-    if (object.event.qsnValue > 0) {
-      console.log(object.event.qsnValue);
+      this.map.overworld.money += object.event.qsnValue.points;
+      object.event.qsnValue.points = 0;
 
-      this.map.overworld.money += object.event.qsnValue;
-      object.event.qsnValue = 0;
+      console.log('Updated money:', this.map.overworld.money);
 
-      this.element.innerHTML = (`
-        <p class="Hud">Points: ${this.map.overworld.money}</p> 
-    `)
-      window.pauseMenu.saveGame(true);
+      this.element.innerHTML = `
+            <p class="Hud">Points: ${this.map.overworld.money}</p> 
+        `;
+
+      await window.pauseMenu.saveGame(true); // Await saveGame
+
+      if (object.event.qsnValue.badge) {
+        const badge = object.event.qsnValue.badge; // Save the badge before setting it to null
+        const badgeImgPath = object.event.qsnValue.image;
+        this.badges.push({ badge, badgeImgPath });
+
+        console.log('Collected badges:', this.badges);
+
+        window.pauseMenu.badges = this.badges;   //Update Badges
+
+        const message = new TextMessage({
+          text: `You have collected a badge: ${badge}!`,
+          onComplete: () => {
+            console.log('Message complete.');
+          },
+        });
+        message.init(document.querySelector(".game-container"));
+      }
     }
-    console.log(this.money);
   }
-
 
   initMoney(container) {
 
@@ -140,9 +160,9 @@ class Overworld {
       },
     ]);
 
-
     // Make overworld globally accessible
     window.overworld = this;
+
   }
 }
 

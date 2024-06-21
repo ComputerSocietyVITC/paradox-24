@@ -88,4 +88,5 @@ class Person extends GameObject {
     }
     this.sprite.setAnimation("idle-" + this.direction);
   }
+
 }

@@ -5,7 +5,10 @@ class PauseMenu {
     this.element = null;
     this.supabase = config.supabase;
     this.userId = config.userId;
+    this.badges = [];
   }
+
+
   async checkForSavedGame() {
     try {
       const { data, error } = await this.supabase
@@ -32,8 +35,26 @@ class PauseMenu {
           <p>Points: ${this.overworld.money}</p>
           <button class="save-button">Save Game</button>
           <button class="load-button">Load Game</button>
+          <button class="achievements-button">Achievements</button>
           <button class="resume-button">Resume</button>
           <button class="sign-out-button">Sign Out</button>
+        </div>
+        <div class="achievements-content">
+          <h1>Achievements</h1>
+          <div class="badge-container" style="display: flex; flex-wrap: wrap;">
+              ${this.badges.length > 0 ?
+        this.badges.map(badgeObj => `
+                  <div style="display: flex; align-items: center; margin: 5px;">
+                    <img src="${badgeObj.badgeImgPath}" alt="Badge Image" style="height: 1em; margin-right: 5px;">
+                    <p style="margin: 0;">${badgeObj.badge}</p>
+                  </div>
+                `).join('')
+        :
+        '<p>No Achievements :(</p>'
+      }
+            </div>
+          <button class="back-button">Back</button>
+          <button class="resume-button achievements-resume-button">Resume Game</button>
         </div>
       `;
 
@@ -61,7 +82,42 @@ class PauseMenu {
     signOutButton.addEventListener("click", () => {
       this.signOutUser();
     });
+
+    const achievementsButton = this.element.querySelector(".achievements-button");
+    achievementsButton.addEventListener("click", () => {
+      this.showAchievements();
+    });
+
+    const backButton = this.element.querySelector(".back-button");
+    backButton.addEventListener("click", () => {
+      this.showPauseMenu();
+    });
+
+    const achievementsResumeButton = this.element.querySelector(".achievements-resume-button");
+    achievementsResumeButton.addEventListener("click", () => {
+      this.closeMenu();
+      this.overworld.resumeGame();
+    });
   }
+
+  showAchievements() {
+    const pauseMenuContent = this.element.querySelector(".pause-menu-content");
+    const achievementsContent = this.element.querySelector(".achievements-content");
+
+    pauseMenuContent.style.display = "none";
+    achievementsContent.style.display = "flex";
+  }
+
+  showPauseMenu() {
+    const pauseMenuContent = this.element.querySelector(".pause-menu-content");
+    const achievementsContent = this.element.querySelector(".achievements-content");
+
+    pauseMenuContent.style.display = "flex";
+    achievementsContent.style.display = "none";
+  }
+
+
+
 
   async signOutUser() {
     try {
@@ -111,6 +167,7 @@ class PauseMenu {
     const gameData = {
       mapName: map.mapName,
       money: overworld.money,
+      badges: overworld.badges,
       progress: map.currentEventIndex || 0,
       gameObjects: Object.entries(gameObjects).reduce((acc, [key, obj]) => {
         acc[key] = {
@@ -173,6 +230,7 @@ class PauseMenu {
           hero.x = gameObjects.hero.x;
           hero.y = gameObjects.hero.y;
           overworld.money = gameData.money;
+          this.badges = gameData.badges;
           this.overworld.map.currentEventIndex = gameData.progress;
           this.overworld.map.cutsceneSpaces = gameData.cutsceneSpaces;
           this.overworld.map.walls = gameData.walls;

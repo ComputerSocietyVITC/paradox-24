@@ -121,7 +121,6 @@ class OverworldMap {
 
   addWall(x, y) {
     this.walls[`${x},${y}`] = true;
-    console.log(x, y);
   }
   removeWall(x, y) {
     delete this.walls[`${x},${y}`];
@@ -233,6 +232,7 @@ window.OverworldMaps = {
         {
           events: [
             { type: "changeMap", map: "City1", heroX: 23, heroY: 11, direction: "down" },
+
           ],
         },
       ],
@@ -289,14 +289,21 @@ window.OverworldMaps = {
               {
                 type: "questionMessage",
                 question: "What is your name?",
-                qsnValue: 10,
+                qsnValue: {
+                  points: 10,
+                  badge: "Explorer Badge",
+                  image: "images/badges/explorer_badge.png"
+                },
                 answer: "Bob",
                 faceHero: "npcB",
+
                 onComplete: (isCorrect, userAnswer) => {
                   console.log("Your answer was: ", QuestionMessage.userAnswer);
                   console.log("Is correct: ", QuestionMessage.isCorrect);
+
                 },
               },
+
             ],
           },
         ],
