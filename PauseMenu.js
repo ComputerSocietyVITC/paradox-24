@@ -43,6 +43,7 @@ class PauseMenu {
           <h1>Achievements</h1>
           <div class="badge-container" style="display: flex; flex-wrap: wrap;">
               ${this.badges.length > 0 ?
+
         this.badges.map(badgeObj => `
                   <div style="display: flex; align-items: center; margin: 5px;">
                     <img src="${badgeObj.badgeImgPath}" alt="Badge Image" style="height: 1em; margin-right: 5px;">
