@@ -4,8 +4,9 @@
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
-    background: rgba(242, 195, 101, 0.8);
-    color: rgb(96, 41, 2);
+    background: var(--menu-background);
+    color: var(--menu-font-color);
+    border: solid 3px var(--menu-border-color);
     padding: 20px;
     border-radius: 10px;
     display: none;
@@ -37,7 +38,7 @@
 }
 
 button {
-    background: #af724c;
+    background: var(--menu-border-color);
     color: white;
     padding: 10px;
     border: none;
@@ -47,5 +48,5 @@ button {
 }
 
 button:hover {
-    background: #a06b45;
+    background: #83583a;
 }
