@@ -6,7 +6,10 @@ class PauseMenu {
     this.supabase = config.supabase;
     this.userId = config.userId;
   }
-
+  updateMoneyDisplay() {
+    const moneyElement = this.element.querySelector(".pause-menu-content p");
+    moneyElement.textContent = `Points: ${this.overworld.money}`;
+  }
   createMenu() {
 
     if (this.element) {
@@ -120,6 +123,7 @@ class PauseMenu {
     } else {
       this.overworld.pauseGame();
       this.element.style.display = "block";    //open
+      this.updateMoneyDisplay();
     }
     this.isOpen = !this.isOpen;
   }
