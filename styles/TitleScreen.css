@@ -1,0 +1,7 @@
+.title-screen {
+    text-align: center; /* Center text horizontally */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+}

@@ -5,28 +5,14 @@ class PauseMenu {
     this.element = null;
     this.supabase = config.supabase;
     this.userId = config.userId;
-    this.badges = [];
-  }
-
-
-  async checkForSavedGame() {
-    try {
-      const { data, error } = await this.supabase
-        .from('game_saves')
-        .select('game_data')
-        .eq('user_id', this.userId)
-        .single();
-      if (error) {
-        throw error;
-      }
-      return data.game_data ? true : false;
-    } catch (error) {
-      console.error("Error checking for saved game:", error);
-      return false;
-    }
   }
 
   createMenu() {
+
+    if (this.element) {
+      this.element.remove();
+    }
+
     this.element = document.createElement("div");
     this.element.classList.add("pause-menu");
     this.element.innerHTML = `
@@ -42,9 +28,9 @@ class PauseMenu {
         <div class="achievements-content">
           <h1>Achievements</h1>
           <div class="badge-container" style="display: flex; flex-wrap: wrap;">
-              ${this.badges.length > 0 ?
+              ${this.overworld.badges.length > 0 ?
 
-        this.badges.map(badgeObj => `
+        this.overworld.badges.map(badgeObj => `
                   <div style="display: flex; align-items: center; margin: 5px;">
                     <img src="${badgeObj.badgeImgPath}" alt="Badge Image" style="height: 1em; margin-right: 5px;">
                     <p style="margin: 0;">${badgeObj.badge}</p>
@@ -54,12 +40,12 @@ class PauseMenu {
         '<p>No Achievements :(</p>'
       }
             </div>
-          <button class="back-button">Back</button>
+          <button class="back-button" >Back</button>
           <button class="resume-button achievements-resume-button">Resume Game</button>
         </div>
       `;
 
-    document.body.appendChild(this.element);
+    this.overworld.element.appendChild(this.element);
 
     const saveButton = this.element.querySelector(".save-button");
     saveButton.addEventListener("click", () => {
@@ -68,15 +54,13 @@ class PauseMenu {
 
     const loadButton = this.element.querySelector(".load-button");
     loadButton.addEventListener("click", () => {
-      this.loadGame();
-      this.closeMenu();
-      this.overworld.resumeGame();
+      this.loadGame(false);
+      this.toggleMenu();
     });
 
     const resumeButton = this.element.querySelector(".resume-button");
     resumeButton.addEventListener("click", () => {
-      this.closeMenu();
-      this.overworld.resumeGame();
+      this.toggleMenu();
     });
 
     const signOutButton = this.element.querySelector(".sign-out-button");
@@ -96,8 +80,7 @@ class PauseMenu {
 
     const achievementsResumeButton = this.element.querySelector(".achievements-resume-button");
     achievementsResumeButton.addEventListener("click", () => {
-      this.closeMenu();
-      this.overworld.resumeGame();
+      this.toggleMenu();
     });
   }
 
@@ -117,9 +100,6 @@ class PauseMenu {
     achievementsContent.style.display = "none";
   }
 
-
-
-
   async signOutUser() {
     try {
       const { error } = await this.supabase.auth.signOut();
@@ -135,26 +115,13 @@ class PauseMenu {
 
   toggleMenu() {
     if (this.isOpen) {
-      this.closeMenu();
+      this.element.style.display = "none";   //close
       this.overworld.resumeGame();
     } else {
-      this.openMenu();
       this.overworld.pauseGame();
+      this.element.style.display = "block";    //open
     }
-  }
-
-  openMenu() {
-    this.createMenu();
-    this.isOpen = true;
-    this.element.style.display = "block";
-  }
-
-  closeMenu() {
-    if (this.element) {
-      this.element.remove();
-      this.element = null;
-    }
-    this.isOpen = false;
+    this.isOpen = !this.isOpen;
   }
 
   async saveGame(flag) {
@@ -198,7 +165,6 @@ class PauseMenu {
     }
   }
 
-
   async loadGame(initialLoad = false) {
     try {
       const { data, error } = await this.supabase
@@ -209,44 +175,66 @@ class PauseMenu {
       if (error) {
         throw error;
       }
+
+      console.log("Check saved state: ", data.game_data ? true : false);
+      if (!(data.game_data ? true : false)) {
+        return false;
+      }
+
       const gameData = data.game_data;
       if (gameData) {
-        const overworld = this.overworld;
+
+        this.overworld.money = gameData.money;
+        this.overworld.badges = gameData.badges;
+
+        if (!initialLoad) {
+          const hero = this.overworld.map.gameObjects.hero;
+          this.overworld.map.removeWall(hero.x, hero.y);
+        }
+
         const mapName = gameData.mapName;
         const mapConfig = window.OverworldMaps[mapName];
-        if (mapConfig) {
-          this.overworld.map = new OverworldMap(mapConfig);
-          const hero = this.overworld.map.gameObjects.hero;
-          const gameObjects = gameData.gameObjects;
-          Object.entries(gameObjects).forEach(([key, obj]) => {
-            const gameObject = this.overworld.map.gameObjects[key];
-            if (gameObject) {
-              gameObject.x = obj.x;
-              gameObject.y = obj.y;
-              gameObject.direction = obj.direction;
-              gameObject.behaviorLoop = obj.behaviorLoop;
-              gameObject.talking = obj.talking;
-            }
-          });
-          hero.x = gameObjects.hero.x;
-          hero.y = gameObjects.hero.y;
-          overworld.money = gameData.money;
-          this.badges = gameData.badges;
-          this.overworld.map.currentEventIndex = gameData.progress;
-          this.overworld.map.cutsceneSpaces = gameData.cutsceneSpaces;
-          this.overworld.map.walls = gameData.walls;
-          this.overworld.map.ledges = gameData.ledges;
-          overworld.hud.innerHTML = `
-            <p class="Hud">Points: ${overworld.money}</p>
-          `;
-          this.overworld.map.overworld = overworld;
-          this.overworld.map.mountObjects();
-          if (!initialLoad) {
-            alert("Game loaded successfully!");
-          }
-        } else {
-          console.error("Map configuration not found for map name:", mapName);
+        this.overworld.startMap(mapConfig);
+        this.overworld.bindActionInput();            //NOTE: Remove event listeners properly
+        this.overworld.bindHeroPositionCheck();
+
+        if (initialLoad) {
+          this.overworld.directionInput = new DirectionInput();
+          this.overworld.directionInput.init();
+          this.overworld.initHud();
+          this.overworld.startGameLoop();
         }
+
+        window.overworld = this;
+
+        const hero = this.overworld.map.gameObjects.hero;
+        this.overworld.map.removeWall(hero.x, hero.y);
+
+        const gameObjects = gameData.gameObjects;
+        Object.entries(gameObjects).forEach(([key, obj]) => {
+          const gameObject = this.overworld.map.gameObjects[key];
+          if (gameObject) {
+            gameObject.x = obj.x;
+            gameObject.y = obj.y;
+            gameObject.direction = obj.direction;
+            gameObject.behaviorLoop = obj.behaviorLoop;
+            gameObject.talking = obj.talking;
+          }
+        });
+        hero.x = gameObjects.hero.x;
+        hero.y = gameObjects.hero.y;
+
+        //NOTE: do this properly
+        // this.overworld.map.currentEventIndex = gameData.progress;    
+        // this.overworld.map.cutsceneSpaces = gameData.cutsceneSpaces;
+
+
+        if (!initialLoad) {
+          alert("Game loaded successfully!");
+        }
+
+        return true;
+
       } else {
         if (!initialLoad) {
           alert("No saved game data found.");
@@ -260,8 +248,10 @@ class PauseMenu {
     }
   }
 
-
   init() {
+
+    this.createMenu();
+
     document.addEventListener("keydown", (event) => {
       if (event.key === "Escape") {
         this.toggleMenu();
@@ -269,35 +259,3 @@ class PauseMenu {
     });
   }
 }
-
-// Initialize PauseMenu when the window loads
-window.addEventListener("load", async () => {
-  const SUPABASE_URL = "https://ddctemysdgslailkedsw.supabase.co";
-  const SUPABASE_KEY =
-    "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImRkY3RlbXlzZGdzbGFpbGtlZHN3Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3MTY5NjI4NzYsImV4cCI6MjAzMjUzODg3Nn0.eqTP9vbO-JnyF42oZuf4EMUwOXbTT9pgqRb2uH21X_U";
-  const _supabase = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
-
-  const {
-    data: { session },
-  } = await _supabase.auth.getSession();
-  if (session) {
-    const userId = session.user.id;
-    const overworld = new Overworld({
-      element: document.querySelector(".game-container"),
-    });
-
-    await overworld.init();
-
-    const pauseMenu = new PauseMenu({ overworld, supabase: _supabase, userId });
-    pauseMenu.init();
-    window.pauseMenu = pauseMenu;
-    const hasSavedGame = await pauseMenu.checkForSavedGame();
-    // if (hasSavedGame) {
-    //   await pauseMenu.loadGame(true);
-    // }
-  } else {
-    console.error("User is not authenticated.");
-    window.location.href = "index.html";
-  }
-});
-

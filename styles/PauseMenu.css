@@ -3,7 +3,7 @@
     position: fixed;
     top: 50%;
     left: 50%;
-    transform: translate(-50%, -50%);
+    transform: translate(-50%, -50%) scale(0.3);
     background: var(--menu-background);
     color: var(--menu-font-color);
     border: solid 3px var(--menu-border-color);
@@ -11,6 +11,9 @@
     border-radius: 10px;
     display: none;
     z-index: 1000;
+    min-width: 250px;
+    min-height: 450px;
+    padding-bottom: 40px;
 }
 
 .pause-menu-content,
@@ -49,4 +52,10 @@ button {
 
 button:hover {
     background: #83583a;
+}
+
+.badge-container {
+    height: 186px;
+    overflow-y: scroll;
+    scrollbar-width: 2px;
 }

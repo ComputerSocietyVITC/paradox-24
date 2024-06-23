@@ -7,7 +7,7 @@ class Overworld {
     this.map = null;
     this.money = 0;         //money
     this.isPaused = false; // Track if the game is paused
-    this.badges = [];
+    this.badges = [];      //badges
   }
 
   startGameLoop() {
@@ -59,7 +59,6 @@ class Overworld {
     }
   }
 
-
   bindActionInput() {
     new KeyPressListener("Enter", () => {
       // Is there a person here to talk to?
@@ -67,7 +66,7 @@ class Overworld {
     });
   }
 
-  bindHeroPositionCheck() {
+  bindHeroPositionCheck() {  
     document.addEventListener("PersonWalkingComplete", (e) => {
       if (e.detail.whoId === "hero") {
         // Hero's position has changed
@@ -86,15 +85,15 @@ class Overworld {
   async setMoney(object) {
     //NOTE : y this.map.overworld.money
     if (object.event.qsnValue.points > 0) {
-      console.log('Initial points:', this.map.overworld.money);
+      console.log('Initial points:', this.money);
 
-      this.map.overworld.money += object.event.qsnValue.points;
+      this.money += object.event.qsnValue.points;
       object.event.qsnValue.points = 0;
 
-      console.log('Updated money:', this.map.overworld.money);
+      console.log('Updated money:', this.money);
 
-      this.element.innerHTML = `
-            <p class="Hud">Points: ${this.map.overworld.money}</p> 
+      this.hud.innerHTML = `
+            <p class="points">Points: ${this.money}</p> 
         `;
 
       await window.pauseMenu.saveGame(true); // Await saveGame
@@ -104,9 +103,9 @@ class Overworld {
         const badgeImgPath = object.event.qsnValue.image;
         this.badges.push({ badge, badgeImgPath });
 
-        console.log('Collected badges:', this.badges);
+        window.pauseMenu.createMenu();   //update pause menu
 
-        window.pauseMenu.badges = this.badges;   //Update Badges
+        console.log('Collected badges:', this.badges);
 
         const message = new TextMessage({
           text: `You have collected a badge: ${badge}!`,
@@ -114,25 +113,23 @@ class Overworld {
             console.log('Message complete.');
           },
         });
-        message.init(document.querySelector(".game-container"));
+        message.init(this.element);
       }
     }
   }
 
-  initMoney(container) {
+  initHud() {   
 
     //Create the element
-    this.element = document.createElement("div");
-    this.element.classList.add("Hud");
+    this.hud = document.createElement("p");
+    this.hud.classList.add("points");
 
-    this.element.innerHTML = (`
-      <p class="Hud">Points: ${this.money}</p> 
+    //NOTE: make this into some decent thingS
+    this.hud.innerHTML = (`              
+      <p class="points">Points: ${this.money}</p> 
   `)
 
-
-    container.appendChild(this.element);
-
-    this.hud = document.querySelector(".Hud");
+    this.element.appendChild(this.hud);
   }
 
   init() {
@@ -143,7 +140,7 @@ class Overworld {
     this.directionInput = new DirectionInput();
     this.directionInput.init();
 
-    this.initMoney(document.querySelector(".game-container"));
+    this.initHud();
 
     this.startGameLoop();
     this.map.startCutscene([
@@ -166,4 +163,8 @@ class Overworld {
   }
 }
 
-
+// NOTE: make initial init() and load_game_init()
+//  check init_money()
+// a way to include cutscenes and play them (prolly just as events)
+// refresh rate speed thing
+// save achievements 
