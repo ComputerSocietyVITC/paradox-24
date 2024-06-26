@@ -6,10 +6,26 @@ class PauseMenu {
     this.supabase = config.supabase;
     this.userId = config.userId;
   }
-  updateMoneyDisplay() {
+  updateMoneyAndBadgeDisplay() {
     const moneyElement = this.element.querySelector(".pause-menu-content p");
     moneyElement.textContent = `Points: ${this.overworld.money}`;
+
+    const badgeElement = this.element.querySelector(".badge-container");
+    badgeElement.innerHTML = `
+      ${this.overworld.badges.length > 0 ?
+        this.overworld.badges.map(badgeObj => `
+            <div style="display: flex; align-items: center; margin: 5px;">
+              <img src="${badgeObj.badgeImgPath}" alt="Badge Image" style="height: 1em; margin-right: 5px;">
+              <p style="margin: 0;">${badgeObj.badge}</p>
+            </div>
+          `).join('')
+        :
+        '<p>No Achievements :(</p>'
+      }
+    `;
   }
+
+
   createMenu() {
 
     if (this.element) {
@@ -123,7 +139,7 @@ class PauseMenu {
     } else {
       this.overworld.pauseGame();
       this.element.style.display = "block";    //open
-      this.updateMoneyDisplay();
+      this.updateMoneyAndBadgeDisplay();
     }
     this.isOpen = !this.isOpen;
   }
