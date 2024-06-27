@@ -2,7 +2,6 @@ class TitleScreen{
 
     constructor(well){
         this.element = null;
-        this.open = false;
         this.overworld = well.overworld;
         this.pauseMenu = well.pauseMenu;
     }

@@ -6,31 +6,8 @@ class PauseMenu {
     this.supabase = config.supabase;
     this.userId = config.userId;
   }
-  updateMoneyAndBadgeDisplay() {
-    const moneyElement = this.element.querySelector(".pause-menu-content p");
-    moneyElement.textContent = `Points: ${this.overworld.money}`;
-
-    const badgeElement = this.element.querySelector(".badge-container");
-    badgeElement.innerHTML = `
-      ${this.overworld.badges.length > 0 ?
-        this.overworld.badges.map(badgeObj => `
-            <div style="display: flex; align-items: center; margin: 5px;">
-              <img src="${badgeObj.badgeImgPath}" alt="Badge Image" style="height: 1em; margin-right: 5px;">
-              <p style="margin: 0;">${badgeObj.badge}</p>
-            </div>
-          `).join('')
-        :
-        '<p>No Achievements :(</p>'
-      }
-    `;
-  }
-
-
+  
   createMenu() {
-
-    if (this.element) {
-      this.element.remove();
-    }
 
     this.element = document.createElement("div");
     this.element.classList.add("pause-menu");
@@ -47,17 +24,7 @@ class PauseMenu {
         <div class="achievements-content">
           <h1>Achievements</h1>
           <div class="badge-container" style="display: flex; flex-wrap: wrap;">
-              ${this.overworld.badges.length > 0 ?
-
-        this.overworld.badges.map(badgeObj => `
-                  <div style="display: flex; align-items: center; margin: 5px;">
-                    <img src="${badgeObj.badgeImgPath}" alt="Badge Image" style="height: 1em; margin-right: 5px;">
-                    <p style="margin: 0;">${badgeObj.badge}</p>
-                  </div>
-                `).join('')
-        :
-        '<p>No Achievements :(</p>'
-      }
+              <p>No Achievements :(</p>
             </div>
           <button class="back-button" >Back</button>
           <button class="resume-button achievements-resume-button">Resume Game</button>
@@ -139,7 +106,6 @@ class PauseMenu {
     } else {
       this.overworld.pauseGame();
       this.element.style.display = "block";    //open
-      this.updateMoneyAndBadgeDisplay();
     }
     this.isOpen = !this.isOpen;
   }
@@ -226,6 +192,7 @@ class PauseMenu {
         }
 
         window.overworld = this;
+        this.overworld.updateAll();
 
         const hero = this.overworld.map.gameObjects.hero;
         this.overworld.map.removeWall(hero.x, hero.y);

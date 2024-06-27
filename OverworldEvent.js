@@ -79,9 +79,28 @@ class OverworldEvent {
       onComplete: (isCorrect, userAnswer) => {
         console.log(`User answered correctly: ${isCorrect}`);
 
-        if (isCorrect) {
-          this.map.overworld.setMoney(this);
+        if (isCorrect && this.event.qsnValue.points > 0) {
+          window.overworld.money += this.event.qsnValue.points;
+          this.event.qsnValue.points = 0;
 
+          if (this.event.qsnValue.badge) {
+
+            const badge = this.event.qsnValue.badge;         //Push badge, imgPath into array
+            const badgeImgPath = this.event.qsnValue.image;
+            window.overworld.badges.push({ badge, badgeImgPath });
+
+            const message = new TextMessage({
+              text: `You have collected a badge: ${badge}!`,
+              onComplete: () => {
+                console.log('Message complete.');
+              },
+            });
+            message.init(window.overworld.element);
+          }
+
+          window.overworld.updateAll(this);
+
+          window.pauseMenu.saveGame(true);   // Auto save
         }
 
         const feedbackMessage = new TextMessage({

@@ -82,40 +82,29 @@ class Overworld {
     this.map.mountObjects();
   }
 
-  async setMoney(object) {
-    //NOTE : y this.map.overworld.money
-    if (object.event.qsnValue.points > 0) {
-      console.log('Initial points:', this.money);
-
-      this.money += object.event.qsnValue.points;
-      object.event.qsnValue.points = 0;
-
-      console.log('Updated money:', this.money);
+  async updateAll(object) {
 
       this.hud.innerHTML = `
             <p class="points">Points: ${this.money}</p> 
         `;
+        
+      const moneyElement = window.pauseMenu.element.querySelector(".pause-menu-content p");       //Update PauseMenu
+      moneyElement.textContent = `Points: ${this.money}`;
 
-      await window.pauseMenu.saveGame(true); // Await saveGame
-
-      if (object.event.qsnValue.badge) {
-        const badge = object.event.qsnValue.badge; // Save the badge before setting it to null
-        const badgeImgPath = object.event.qsnValue.image;
-        this.badges.push({ badge, badgeImgPath });
-
-        window.pauseMenu.createMenu();   //update pause menu
-
-        console.log('Collected badges:', this.badges);
-
-        const message = new TextMessage({
-          text: `You have collected a badge: ${badge}!`,
-          onComplete: () => {
-            console.log('Message complete.');
-          },
-        });
-        message.init(this.element);
+      const badgeElement = window.pauseMenu.element.querySelector(".badge-container");    //Update PauseMenu
+      badgeElement.innerHTML = `
+      ${this.badges.length > 0 ?
+        this.badges.map(badgeObj => `
+            <div style="display: flex; align-items: center; margin: 5px;">
+              <img src="${badgeObj.badgeImgPath}" alt="Badge Image" style="height: 1em; margin-right: 5px;">
+              <p style="margin: 0;">${badgeObj.badge}</p>
+            </div>
+          `).join('')
+        :
+        '<p>No Achievements :(</p>'
       }
-    }
+    `;
+
   }
 
   initHud() {   
@@ -163,8 +152,9 @@ class Overworld {
   }
 }
 
-// NOTE: make initial init() and load_game_init()
-//  check init_money()
+// NOTE: make initial_init() and load_game_init()
 // a way to include cutscenes and play them (prolly just as events)
 // refresh rate speed thing
-// save achievements 
+// NOTE: player position in last map waala removeWall() hataa bhai
+// update what is being saved and loaded
+// update stuff using window.XYZ
