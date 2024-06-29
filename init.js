@@ -1,3 +1,6 @@
+//NOTE: everything jiska object onetime banana hai, wo inital load mai banadena aur window.XYZ mai rakh dena
+
+
 window.addEventListener("load", async () => {
   const SUPABASE_URL = "https://ddctemysdgslailkedsw.supabase.co";
   const SUPABASE_KEY =
@@ -19,11 +22,6 @@ window.addEventListener("load", async () => {
 
     const titleScreen = new TitleScreen({overworld : overworld, pauseMenu: pauseMenu});
     titleScreen.createMenu();
-
-    // if (!(pauseMenu.loadGame(true))) {  
-    //   console.log("NO save, sed")
-    //   overworld.init();
-    // }
 
   } 
   else {
