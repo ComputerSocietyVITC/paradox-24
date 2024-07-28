@@ -20,6 +20,20 @@
   opacity: 1;
 }
 
+.TextMessage_a {
+  margin: 0;
+  font-size: 8px;
+  padding: 0;
+  -webkit-appearance: none;
+  background: none;
+  border: 0;
+  font-family: inherit;
+  cursor: pointer;
+  position: absolute;
+  left: 4px;
+  bottom: 2px;
+}
+
 .TextMessage_button {
   margin: 0;
   font-size: 8px;  

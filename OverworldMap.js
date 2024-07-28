@@ -17,6 +17,66 @@ class OverworldMap {
     this.isCutscenePlaying = false;
     this.initialCutscenePlayed = false; // Flag to track if the initial cutscene has been played
     this.secondCutscenePlayed = false; // Flag to track if the second cutscene has been played
+    this.supabase = config.supabase;
+    this.init();
+  }
+
+  init() {
+    // TODO: populate with NPCs holding questions
+
+    // this array can hold any length of challenges
+    const chall = [{
+      id: 1,
+      title: "Geography",
+      description: "What is the capital of France?",
+      flag: "France",
+      points: 10,
+      hasAttachments: false
+    }];
+
+    // populate City1, City2, City3, City4, City5 with NPCs holding questions
+    // each city should have same number of NPCs
+    // each NPC is unique to each unique challenge from the array above
+
+    for (let i = 1; i <= 5; i++) {
+      const city = `City${i}`;
+      const challenge = chall[0];
+      window.OverworldMaps[city].gameObjects[`npcA`] = new Person({
+        x: utils.withGrid(19),
+        y: utils.withGrid(9),
+        src: "/images/characters/people/npc2.png",
+        // behaviorLoop: [
+        //   { type: "walk",  direction: "left" },
+        //   { type: "stand",  direction: "up", time: 800 },
+        //   { type: "walk",  direction: "up" },
+        //   { type: "walk",  direction: "right" },
+        //   { type: "walk",  direction: "down" },
+        // ],
+        talking: [
+          {
+            events: [
+              {
+                type: "questionMessage",
+                question: challenge.description,
+                qsnValue: {
+                  points: challenge.points,
+                  badge: "Explorer Badge",
+                  image: "images/badges/explorer_badge.png"
+                },
+                answer: challenge.flag,
+                faceHero: "npcA",
+
+                onComplete: (isCorrect, userAnswer) => {
+                  console.log("Your answer was: ", QuestionMessage.userAnswer);
+                  console.log("Is correct: ", QuestionMessage.isCorrect);
+                },
+              },
+
+            ],
+          },
+        ],
+      });
+    }
   }
 
   drawLowerImage(ctx, cameraPerson) {
@@ -249,52 +309,21 @@ window.OverworldMaps = {
         y: utils.withGrid(11),
         direction: "down",
       }),
-      npcA: new Person({
-        x: utils.withGrid(9),
-        y: utils.withGrid(11),
-        src: "/images/characters/people/npc1.png",
-        behaviorLoop: [
-          { type: "stand", direction: "left", time: 800 },
-          { type: "stand", direction: "up", time: 800 },
-          { type: "stand", direction: "right", time: 1200 },
-          { type: "stand", direction: "up", time: 300 },
-        ],
-        talking: [
-          {
-            events: [
-              {
-                type: "textMessage",
-                text: "to get your task proceed to the shop",
-                faceHero: "npcA",
-              },
-              { type: "textMessage", text: "Go away!" },
-            ],
-          },
-        ],
-      }),
       npcB: new Person({
         x: utils.withGrid(19),
         y: utils.withGrid(9),
         src: "/images/characters/people/npc2.png",
-        // behaviorLoop: [
-        //   { type: "walk",  direction: "left" },
-        //   { type: "stand",  direction: "up", time: 800 },
-        //   { type: "walk",  direction: "up" },
-        //   { type: "walk",  direction: "right" },
-        //   { type: "walk",  direction: "down" },
-        // ],
         talking: [
           {
             events: [
+              { type: "textMessage", text: "interencdec: Can you get the real meaning from this file.", link: "https://artifacts.picoctf.net/c_titan/3/enc_flag" },
               {
                 type: "questionMessage",
-                question: "What is your name?",
+                question: "Enter flag:",
                 qsnValue: {
-                  points: 10,
-                  badge: "Explorer Badge",
-                  image: "images/badges/explorer_badge.png"
+                  points: 100,
                 },
-                answer: "Bob",
+                answer: "picoCTF{caesar_d3cr9pt3d_b204adc6}",
                 faceHero: "npcB",
 
                 onComplete: (isCorrect, userAnswer) => {
@@ -307,7 +336,7 @@ window.OverworldMaps = {
             ],
           },
         ],
-      }),
+      }) 
     },
     walls: {
 
@@ -659,13 +688,39 @@ window.OverworldMaps = {
     lowerSrc: "images/maps/city/city2.png",
     upperSrc: "images/maps/city/0.png",
     gameObjects: {
-
-
       hero: new Person({
         isPlayerControlled: true,
         x: utils.withGrid(1),
         y: utils.withGrid(9),
         direction: "down",
+      }),
+      npcC: new Person({
+        x: utils.withGrid(19),
+        y: utils.withGrid(19),
+        src: "/images/characters/people/npc2.png",
+        talking: [
+          {
+            events: [
+              { type: "textMessage", text: "packer: Reverse this linux executable?", link: "https://artifacts.picoctf.net/c_titan/22/out" },
+              {
+                type: "questionMessage",
+                question: "Enter flag:",
+                qsnValue: {
+                  points: 200,
+                },
+                answer: "picoCTF{U9X_UnP4ck1N6_B1n4Ri3S_5dee4441}",
+                faceHero: "npcC",
+
+                onComplete: (isCorrect, userAnswer) => {
+                  console.log("Your answer was: ", QuestionMessage.userAnswer);
+                  console.log("Is correct: ", QuestionMessage.isCorrect);
+
+                },
+              },
+
+            ],
+          },
+        ],
       }),
     },
     walls: {
@@ -1234,6 +1289,34 @@ window.OverworldMaps = {
         y: utils.withGrid(3),
         direction: "right",
       }),
+      npcD: new Person({
+        x: utils.withGrid(19),
+        y: utils.withGrid(19),
+        src: "/images/characters/people/npc2.png",
+        talking: [
+          {
+            events: [
+              { type: "textMessage", text: "Time machine: What was I last working on? I remember writing a note to help me remember...", link: "https://artifacts.picoctf.net/c_titan/67/challenge.zip" },
+              {
+                type: "questionMessage",
+                question: "Enter flag:",
+                qsnValue: {
+                  points: 200,
+                },
+                answer: "picoCTF{t1m3m@ch1n3_5cde9075}",
+                faceHero: "npcD",
+
+                onComplete: (isCorrect, userAnswer) => {
+                  console.log("Your answer was: ", QuestionMessage.userAnswer);
+                  console.log("Is correct: ", QuestionMessage.isCorrect);
+
+                },
+              },
+
+            ],
+          },
+        ],
+      }),
     },
     walls: {
       //fence
@@ -1766,6 +1849,34 @@ window.OverworldMaps = {
         x: utils.withGrid(40),
         y: utils.withGrid(20),
         direction: "left",
+      }),
+      npcE: new Person({
+        x: utils.withGrid(17),
+        y: utils.withGrid(19),
+        src: "/images/characters/people/npc2.png",
+        talking: [
+          {
+            events: [
+              { type: "textMessage", text: "vignere: Can you decrypt this message? Decrypt this message using this key \"CYLAB\".", link: "https://artifacts.picoctf.net/c/158/cipher.txt" },
+              {
+                type: "questionMessage",
+                question: "Enter flag:",
+                qsnValue: {
+                  points: 100,
+                },
+                answer: "picoCTF{D0NT_US3_V1G3N3R3_C1PH3R_ae82272q}",
+                faceHero: "npcE",
+
+                onComplete: (isCorrect, userAnswer) => {
+                  console.log("Your answer was: ", QuestionMessage.userAnswer);
+                  console.log("Is correct: ", QuestionMessage.isCorrect);
+
+                },
+              },
+
+            ],
+          },
+        ],
       }),
     },
     walls: {

@@ -1,8 +1,9 @@
 class TextMessage {
-  constructor({ text, onComplete }) {
+  constructor({ text, link, onComplete }) {
     this.text = text;
     this.onComplete = onComplete;
     this.element = null;
+    this.link = link;
   }
 
   createElement() {
@@ -10,11 +11,19 @@ class TextMessage {
     this.element = document.createElement("div");
     this.element.classList.add("TextMessage");
 
-    this.element.innerHTML = (`
-      <p class="TextMessage_p"></p>
-      <button class="TextMessage_button">Next</button>
-    `)
-
+    if (this.link) {
+      this.element.innerHTML = (`
+        <p class="TextMessage_p"></p>
+        <a href="${this.link}" target="_blank" class="TextMessage_a">Download</a>
+        <button class="TextMessage_button">Next</button>
+      `)
+    } else {
+      this.element.innerHTML = (`
+        <p class="TextMessage_p"></p>
+        <button class="TextMessage_button">Next</button>
+      `)
+    }
+    
     //Init the typewriter effect
     this.revealingText = new RevealingText({
       element: this.element.querySelector(".TextMessage_p"),
